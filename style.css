@@ -1,0 +1,364 @@
+/* Custom Logo */
+.custom-logo-link {
+	display: inline-block;
+}
+
+.custom-logo {
+	width: 70px;
+	height: auto;
+}
+
+@media screen and (min-width: 1024px) {
+	.custom-logo {
+		width: 120px;
+	}
+}
+
+/* Custom H1 Styles */
+h1 {
+	font-size: 28px;
+	font-weight: 600;
+	line-height: 1.2;
+	color: #222222;
+}
+
+.dark h1 {
+	color: #f5f5f9;
+}
+
+@media screen and (min-width: 768px) {
+	h1 {
+		font-size: 54px;
+	}
+}
+
+/* Footer Custom Styles */
+.site-footer {
+	background: #0f172a;
+}
+
+.site-footer a,
+.site-footer a:link,
+.site-footer a:visited {
+	color: #E2E8F0 !important;
+	text-decoration: none;
+}
+
+.site-footer a:hover,
+.site-footer a:focus,
+.site-footer a:active {
+	color: #ffffff !important;
+}
+
+.site-footer .text-gray-300 {
+	color: #E2E8F0 !important;
+}
+
+.site-footer .text-gray-400 {
+	color: #94a3b8 !important;
+}
+
+.site-footer .text-gray-500 {
+	color: #64748b !important;
+}
+
+/* Header Custom Styles */
+.site-header {
+	background: #ffffff;
+	color: #222222;
+}
+
+.dark .site-header {
+	background: #1f2937;
+	color: #e5e7eb;
+}
+
+.site-header input[type="search"],
+.site-header input[type="text"],
+.site-header .header-search-input {
+	background: #ffffff !important;
+	border: 1px solid #D0D6E8 !important;
+	border-radius: 8px !important;
+	height: 48px !important;
+}
+
+.dark .site-header input[type="search"],
+.dark .site-header input[type="text"],
+.dark .site-header .header-search-input {
+	background: #1f2937 !important;
+	border-color: #374151 !important;
+}
+
+.site-header,
+.site-header a,
+.site-header input,
+.site-header button,
+.site-header span,
+.site-header i,
+.site-header svg,
+.site-header .text-gray-700,
+.site-header .text-gray-800,
+.site-header .text-gray-600,
+.site-header .text-gray-400,
+.site-header [data-lucide] {
+	color: #222222 !important;
+}
+
+.dark .site-header,
+.dark .site-header a,
+.dark .site-header input,
+.dark .site-header button,
+.dark .site-header span,
+.dark .site-header i,
+.dark .site-header svg,
+.dark .site-header .text-gray-300,
+.dark .site-header .text-gray-400,
+.dark .site-header .text-gray-500,
+.dark .site-header [data-lucide] {
+	color: #e5e7eb !important;
+}
+
+.site-header input::placeholder {
+	color: #9ca3af !important;
+}
+
+.dark .site-header input::placeholder {
+	color: #6b7280 !important;
+}
+
+.site-header .phone-icon {
+	width: 14px;
+	height: 14px;
+	flex-shrink: 0;
+}
+
+.site-header .phone-icon path {
+	fill: #294F78;
+}
+
+.dark .site-header .phone-icon path {
+	fill: #e5e7eb !important;
+}
+
+.site-header a,
+.site-header span,
+.site-header button,
+.site-header input {
+	font-size: 16px !important;
+}
+
+.site-header a:hover {
+	color: #2563eb !important;
+}
+
+.dark .site-header a:hover {
+	color: #60a5fa !important;
+}
+
+.site-header .text-sm,
+.site-header .text-sm a,
+.site-header .text-sm span,
+.site-header .text-sm input {
+	font-size: 14px !important;
+}
+
+#theme-toggle .toggle-track {
+	transition: background-color 0.3s ease;
+	background-color: #e5e7eb;
+}
+
+.dark #theme-toggle .toggle-track {
+	background-color: #3b82f6;
+}
+
+#theme-toggle .toggle-thumb {
+	transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: left;
+	left: 2px;
+}
+
+.dark #theme-toggle .toggle-thumb {
+	left: 22px;
+}
+
+.theme-icon-moon {
+	display: block;
+}
+
+.theme-icon-sun {
+	display: none;
+}
+
+.dark .theme-icon-moon {
+	display: none;
+}
+
+.dark .theme-icon-sun {
+	display: block;
+}
+
+/* Screen Reader Text */
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+	background-color: #f1f1f1;
+	border-radius: 3px;
+	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	clip: auto !important;
+	clip-path: none;
+	color: #21759b;
+	display: block;
+	font-size: 0.875rem;
+	font-weight: 700;
+	height: auto;
+	left: 5px;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	text-decoration: none;
+	top: 5px;
+	width: auto;
+	z-index: 100000;
+}
+
+/* Alignments */
+.alignleft {
+	float: left;
+	margin-right: 1.5em;
+	margin-bottom: 1.5em;
+}
+
+.alignright {
+	float: right;
+	margin-left: 1.5em;
+	margin-bottom: 1.5em;
+}
+
+.aligncenter {
+	clear: both;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 1.5em;
+}
+
+/* Mobile Header & Menu */
+@media screen and (max-width: 1023px) {
+	.site-header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 78px;
+	}
+	
+	#page {
+		padding-top: 78px;
+	}
+	
+	#mobile-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		max-height: calc(100vh - 78px);
+		overflow-y: auto;
+		background-color: #ffffff !important;
+	}
+	
+	.dark #mobile-menu {
+		background-color: #111827 !important;
+	}
+	
+	.mobile-search-input {
+		width: 200px !important;
+		height: 44px !important;
+		border-radius: 8px !important;
+		background: #ffffff !important;
+		border: 1px solid #D0D6E8 !important;
+	}
+	
+	.dark .mobile-search-input {
+		background: #1f2937 !important;
+		border-color: #374151 !important;
+	}
+}
+
+/* Mobile menu open - body scroll lock */
+body.menu-open {
+	overflow: hidden;
+}
+
+/* Global site dark mode styles */
+.dark body {
+	background-color: #111827 !important;
+}
+
+.dark #page,
+.dark .site-main {
+	background-color: #111827 !important;
+	color: #e5e7eb !important;
+}
+
+.dark section.bg-white,
+.dark .bg-white.border-gray-200,
+.dark .bg-white.p-6,
+.dark .bg-white.p-8,
+.dark .bg-white.rounded-xl,
+.dark .bg-white.rounded-2xl {
+	background-color: #1f2937 !important;
+	border-color: #374151 !important;
+}
+
+.dark .h-48.bg-gray-100,
+.dark .bg-gray-100 {
+	background-color: #374151 !important;
+}
+
+.dark .text-\[\#222222\],
+.dark .text-gray-800 {
+	color: #f3f4f6 !important;
+}
+
+.dark .text-gray-700 {
+	color: #d1d5db !important;
+}
+
+.dark .text-gray-600 {
+	color: #9ca3af !important;
+}
+
+.dark .text-gray-500 {
+	color: #6b7280 !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+	border-color: #374151 !important;
+}
+
+.dark .text-blue-600 {
+	color: #60a5fa !important;
+}
+
+/* Dark mode gradient overlays */
+.dark .gradient-overlay-dark,
+.dark .overlay-dark {
+	background: linear-gradient(to right, rgba(17, 24, 39, 0.9), rgba(243, 244, 246, 0)) !important;
+}
+
+.gradient-overlay-light,
+.overlay-light {
+	background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(243, 244, 246, 0)) !important;
+}

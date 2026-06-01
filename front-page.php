@@ -41,72 +41,59 @@ get_header();
 	</section>
 
 	<!-- Basic Directions -->
-	<section class="py-16 lg:py-24 bg-white dark:bg-gray-900">
+	<section class="py-16 lg:py-24 dark:bg-gray-900 bg-[url('<?php the_field('sec2-bg')?>')] bg-cover bg-center bg-no-repeat basic-directions-section">
 		<div class="max-w-[1200px] mx-auto px-4">
 			<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-4">
 				<h2 class="text-3xl font-bold text-[#222222]">Основные направления</h2>
-				<a href="#" class="text-[#1e3a5f] font-medium hover:underline flex items-center gap-1">
+				<?php
+				$catalog_page = get_page_by_title( 'Каталог' );
+				$catalog_url  = $catalog_page ? get_permalink( $catalog_page->ID ) : '#';
+				?>
+				<a href="<?php echo esc_url( $catalog_url ); ?>" class="inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-sm font-medium hover:bg-gray-50 transition-colors">
 					Перейти в каталог
-					<i data-lucide="arrow-right" class="w-4 h-4"></i>
 				</a>
 			</div>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-				<!-- Card 1 -->
-				<div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
-					<div class="h-48 bg-gray-100 overflow-hidden">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=Shelving" alt="Стеллажные системы" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<div class="p-6">
-						<h3 class="text-lg font-bold text-[#222222] mb-2">Стеллажные системы</h3>
-						<p class="text-sm text-gray-600 mb-4 line-clamp-3">Надёжные решения для хранения и рациональной организации складского пространства.</p>
-						<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-							Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-						</a>
-					</div>
-				</div>
+				<?php
+				$categories = get_terms(
+					array(
+						'taxonomy'   => 'product_cat',
+						'hide_empty' => false,
+						'number'     => 4,
+						'exclude'    => array( 1 ),
+					)
+				);
 
-				<!-- Card 2 -->
-				<div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
-					<div class="h-48 bg-gray-100 overflow-hidden">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=Automated" alt="Автоматизированные системы" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<div class="p-6">
-						<h3 class="text-lg font-bold text-[#222222] mb-2">Автоматизированные системы</h3>
-						<p class="text-sm text-gray-600 mb-4 line-clamp-3">Надёжные решения для хранения и рациональной организации складского пространства.</p>
-						<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-							Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-						</a>
-					</div>
-				</div>
+				if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+					foreach ( $categories as $category ) {
+						$thumbnail_id = get_term_meta( $category->term_id, 'thumbnail_id', true );
+						$image_url    = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'medium' ) : '';
 
-				<!-- Card 3 -->
-				<div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
-					<div class="h-48 bg-gray-100 overflow-hidden">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=Conveyors" alt="Конвейеры" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<div class="p-6">
-						<h3 class="text-lg font-bold text-[#222222] mb-2">Конвейеры и комплектующие</h3>
-						<p class="text-sm text-gray-600 mb-4 line-clamp-3">Оборудование для перемещения, сортировки и внутренней логистики грузов.</p>
-						<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-							Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-						</a>
-					</div>
-				</div>
+						if ( ! $image_url ) {
+							$image_url = 'https://placehold.co/400x300/e2e8f0/94a3b8?text=' . urlencode( $category->name );
+						}
 
-				<!-- Card 4 -->
-				<div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
-					<div class="h-48 bg-gray-100 overflow-hidden">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=Furniture" alt="Мебель" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<div class="p-6">
-						<h3 class="text-lg font-bold text-[#222222] mb-2">Производственная мебель</h3>
-						<p class="text-sm text-gray-600 mb-4 line-clamp-3">Оснащение рабочих и производственных зон с учётом практических задач предприятия.</p>
-						<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-							Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-						</a>
-					</div>
-				</div>
+						$description = ! empty( $category->description ) ? $category->description : 'Категория товаров для вашего склада.';
+						$category_link = get_term_link( $category );
+						?>
+						<div class="bg-white border overflow-hidden shadow-sm hover:shadow-lg transition-shadow group">
+							<div class="h-[250px] bg-gray-100 overflow-hidden">
+								<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $category->name ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+							</div>
+							<div class="p-6">
+								<h3 class="text-lg font-bold text-[#222222] mb-2"><?php echo esc_html( $category->name ); ?></h3>
+								<p class="text-sm text-gray-600 mb-4"><?php echo esc_html( $description ); ?></p>
+								<a href="<?php echo esc_url( $category_link ); ?>" class="bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
+									Подробнее
+									<i data-lucide="arrow-right" class="w-[16px] h-[16px]"></i>
+								</a>
+							</div>
+						</div>
+						<?php
+					}
+				}
+				?>
 			</div>
 		</div>
 	</section>

@@ -362,3 +362,35 @@ body.menu-open {
 .overlay-light {
 	background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(243, 244, 246, 0)) !important;
 }
+
+/* Dark mode for "Basic Directions" section */
+.dark .basic-directions-section {
+	background-color: #111827 !important;
+	background-image: none !important;
+}
+
+.dark .basic-directions-section .bg-white {
+	background-color: #1f2937 !important;
+}
+
+.dark .basic-directions-section .border {
+	border-color: #374151 !important;
+}
+
+.dark .basic-directions-section .text-gray-600 {
+	color: #9ca3af !important;
+}
+
+.dark .basic-directions-section h3 {
+	color: #f3f4f6 !important;
+}
+
+.dark .basic-directions-section .bg-white.border a {
+	background-color: #1f2937 !important;
+	color: #ffffff !important;
+	border-color: #4b5563 !important;
+}
+
+.dark .basic-directions-section .bg-white.border a:hover {
+	background-color: #374151 !important;
+}

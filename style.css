@@ -8,6 +8,12 @@
 	height: auto;
 }
 
+/* Remove margins between sections */
+section {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
 @media screen and (min-width: 1024px) {
 	.custom-logo {
 		width: 120px;
@@ -385,12 +391,169 @@ body.menu-open {
 	color: #f3f4f6 !important;
 }
 
-.dark .basic-directions-section .bg-white.border a {
+.dark .basic-directions-section .basic-directions-btn {
 	background-color: #1f2937 !important;
 	color: #ffffff !important;
 	border-color: #4b5563 !important;
 }
 
-.dark .basic-directions-section .bg-white.border a:hover {
+.dark .basic-directions-section .basic-directions-btn:hover {
+	background-color: #374151 !important;
+}
+
+/* Dark mode for "Services" section */
+.dark .services-section {
+	background-color: #111827 !important;
+	background-image: none !important;
+}
+
+.services-section .bg-white {
+	background-color: #FBFBFD !important;
+}
+
+.dark .services-section .bg-white {
+	background-color: #1f2937 !important;
+}
+
+.services-section h3 {
+	color: #222222 !important;
+}
+
+.services-section .text-gray-600 {
+	color: #6b7280 !important;
+}
+
+.dark .services-section .text-gray-600 {
+	color: #9ca3af !important;
+}
+
+.dark .services-section h3 {
+	color: #f3f4f6 !important;
+}
+
+/* Services section - light mode text colors */
+.services-section .text-\[\#1e3a5f\],
+.services-section [data-lucide] {
+	color: #1e3a5f !important;
+	fill: #1e3a5f !important;
+}
+
+/* Services section - dark mode text colors */
+.dark .services-section .text-\[\#1e3a5f\],
+.dark .services-section [data-lucide] {
+	color: #e5e7eb !important;
+	fill: #e5e7eb !important;
+}
+
+/* Services section - icon background */
+.services-section .bg-blue-50 {
+	background-color: #eff6ff !important;
+}
+
+.dark .services-section .bg-blue-50 {
+	background-color: #1e3a5f !important;
+}
+
+/* Dark mode for "About" section */
+.dark .about-section {
+	background-color: #111827 !important;
+	background-image: none !important;
+}
+
+.about-section .bg-white {
+	background-color: #ffffff !important;
+}
+
+.dark .about-section .bg-white {
+	background-color: #1f2937 !important;
+}
+
+.about-section h2,
+.about-section h3 {
+	color: #222222 !important;
+}
+
+.dark .about-section h2,
+.dark .about-section h3 {
+	color: #f3f4f6 !important;
+}
+
+.about-section .text-gray-600 {
+	color: #6b7280 !important;
+}
+
+.dark .about-section .text-gray-600 {
+	color: #9ca3af !important;
+}
+
+.about-section .basic-directions-btn {
+	background-color: #ffffff !important;
+	color: #1e3a5f !important;
+	border-color: #D0D6E8 !important;
+}
+
+.about-section .basic-directions-btn:hover {
+	background-color: #222222 !important;
+	color: #ffffff !important;
+}
+
+.dark .about-section .basic-directions-btn {
+	background-color: #1f2937 !important;
+	color: #ffffff !important;
+	border-color: #4b5563 !important;
+}
+
+.dark .about-section .basic-directions-btn:hover {
+	background-color: #374151 !important;
+}
+
+/* Dark mode for "Projects" section */
+.dark .projects-section {
+	background-color: #111827 !important;
+	background-image: none !important;
+}
+
+.projects-section .bg-white {
+	background-color: #ffffff !important;
+}
+
+.dark .projects-section .bg-white {
+	background-color: #1f2937 !important;
+}
+
+.projects-section h2 {
+	color: #222222 !important;
+}
+
+.dark .projects-section h2 {
+	color: #f3f4f6 !important;
+}
+
+.projects-section .text-gray-600 {
+	color: #6b7280 !important;
+}
+
+.dark .projects-section .text-gray-600 {
+	color: #9ca3af !important;
+}
+
+.projects-section .basic-directions-btn {
+	background-color: #ffffff !important;
+	color: #1e3a5f !important;
+	border-color: #D0D6E8 !important;
+}
+
+.projects-section .basic-directions-btn:hover {
+	background-color: #222222 !important;
+	color: #ffffff !important;
+}
+
+.dark .projects-section .basic-directions-btn {
+	background-color: #1f2937 !important;
+	color: #ffffff !important;
+	border-color: #4b5563 !important;
+}
+
+.dark .projects-section .basic-directions-btn:hover {
 	background-color: #374151 !important;
 }

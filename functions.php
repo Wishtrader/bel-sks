@@ -266,3 +266,241 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+/**
+ * Register Custom Post Type: Services
+ */
+function belsks_register_services_cpt() {
+	$labels = array(
+		'name'                  => _x( 'Услуги', 'Post type general name', 'belsks' ),
+		'singular_name'         => _x( 'Услуга', 'Post type singular name', 'belsks' ),
+		'menu_name'             => _x( 'Услуги', 'Admin Menu text', 'belsks' ),
+		'name_admin_bar'        => _x( 'Услуга', 'Add New on Toolbar', 'belsks' ),
+		'add_new'               => __( 'Добавить новую', 'belsks' ),
+		'add_new_item'          => __( 'Добавить новую услугу', 'belsks' ),
+		'new_item'              => __( 'Новая услуга', 'belsks' ),
+		'edit_item'             => __( 'Редактировать услугу', 'belsks' ),
+		'view_item'             => __( 'Просмотр услуги', 'belsks' ),
+		'all_items'             => __( 'Все услуги', 'belsks' ),
+		'search_items'          => __( 'Поиск услуг', 'belsks' ),
+		'parent_item_colon'     => __( 'Родительская услуга:', 'belsks' ),
+		'not_found'             => __( 'Услуги не найдены.', 'belsks' ),
+		'not_found_in_trash'    => __( 'В корзине услуг нет.', 'belsks' ),
+		'featured_image'        => _x( 'Изображение услуги', 'Overrides the "Featured Image" phrase for this post type', 'belsks' ),
+		'set_featured_image'    => _x( 'Установить изображение услуги', 'Overrides the "Set featured image" phrase for this post type', 'belsks' ),
+		'remove_featured_image' => _x( 'Удалить изображение услуги', 'Overrides the "Remove featured image" phrase for this post type', 'belsks' ),
+		'use_featured_image'    => _x( 'Использовать как изображение услуги', 'Overrides the "Use as featured image" phrase for this post type', 'belsks' ),
+		'archives'              => _x( 'Архив услуг', 'The post type archive label', 'belsks' ),
+		'insert_into_item'      => _x( 'Добавить в услугу', 'Overrides the "Insert into post" phrase for this post type', 'belsks' ),
+		'uploaded_to_this_item' => _x( 'Загружено для услуги', 'Overrides the "Uploaded to this post" phrase for this post type', 'belsks' ),
+		'filter_items_list'     => _x( 'Фильтр списка услуг', 'Overrides the "Filter items list" phrase for this post type', 'belsks' ),
+		'items_list_navigation' => _x( 'Навигация по списку услуг', 'Overrides the "Items list navigation" phrase for this post type', 'belsks' ),
+		'items_list'            => _x( 'Список услуг', 'Overrides the "Items list" phrase for this post type', 'belsks' ),
+	);
+
+	$args = array(
+		'labels'             => $labels,
+		'public'             => true,
+		'publicly_queryable' => true,
+		'show_ui'            => true,
+		'show_in_menu'       => true,
+		'query_var'          => true,
+		'rewrite'            => array( 'slug' => 'services' ),
+		'capability_type'    => 'post',
+		'has_archive'        => true,
+		'hierarchical'       => false,
+		'menu_position'      => 20,
+		'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes' ),
+		'show_in_rest'       => true,
+		'menu_icon'          => 'dashicons-services',
+		'sort_column'        => 'menu_order, post_date',
+	);
+
+	register_post_type( 'services', $args );
+}
+add_action( 'init', 'belsks_register_services_cpt' );
+
+/**
+ * Register ACF Fields for Services
+ */
+function belsks_register_services_acf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'      => 'group_services_fields',
+			'title'    => 'Детали услуги',
+			'fields'   => array(
+				array(
+					'key'               => 'field_services_icon',
+					'label'             => 'Иконка',
+					'name'              => 'service_icon',
+					'type'              => 'image',
+					'instructions'      => 'Загрузите иконку для услуги (SVG или PNG)',
+					'required'          => 0,
+					'conditional_logic' => 0,
+					'wrapper'           => array(
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					),
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+					'min_width'         => '',
+					'min_height'        => '',
+					'min_size'          => '',
+					'max_width'         => '',
+					'max_height'        => '',
+					'max_size'          => '',
+					'mime_types'        => 'svg,png,jpg,jpeg',
+				),
+				array(
+					'key'               => 'field_services_description',
+					'label'             => 'Краткое описание',
+					'name'              => 'service_description',
+					'type'              => 'textarea',
+					'instructions'      => 'Краткое описание услуги (появится на карточке)',
+					'required'          => 0,
+					'conditional_logic' => 0,
+					'wrapper'           => array(
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					),
+					'rows'              => 4,
+					'placeholder'       => '',
+					'maxlength'         => '',
+					'new_lines'         => 'wpautop',
+				),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'services',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'hide_on_screen'        => '',
+			'active'                => true,
+			'description'           => '',
+			'show_in_rest'          => false,
+		) );
+	}
+}
+add_action( 'acf/init', 'belsks_register_services_acf_fields' );
+
+/**
+ * Register Custom Post Type: Projects
+ */
+function belsks_register_projects_cpt() {
+	$labels = array(
+		'name'                  => _x( 'Проекты', 'Post type general name', 'belsks' ),
+		'singular_name'         => _x( 'Проект', 'Post type singular name', 'belsks' ),
+		'menu_name'             => _x( 'Проекты', 'Admin Menu text', 'belsks' ),
+		'name_admin_bar'        => _x( 'Проект', 'Add New on Toolbar', 'belsks' ),
+		'add_new'               => __( 'Добавить новый', 'belsks' ),
+		'add_new_item'          => __( 'Добавить новый проект', 'belsks' ),
+		'new_item'              => __( 'Новый проект', 'belsks' ),
+		'edit_item'             => __( 'Редактировать проект', 'belsks' ),
+		'view_item'             => __( 'Просмотр проекта', 'belsks' ),
+		'all_items'             => __( 'Все проекты', 'belsks' ),
+		'search_items'          => __( 'Поиск проектов', 'belsks' ),
+		'parent_item_colon'     => __( 'Родительский проект:', 'belsks' ),
+		'not_found'             => __( 'Проекты не найдены.', 'belsks' ),
+		'not_found_in_trash'    => __( 'В корзине проектов нет.', 'belsks' ),
+		'featured_image'        => _x( 'Изображение проекта', 'Overrides the "Featured Image" phrase for this post type', 'belsks' ),
+		'set_featured_image'    => _x( 'Установить изображение проекта', 'Overrides the "Set featured image" phrase for this post type', 'belsks' ),
+		'remove_featured_image' => _x( 'Удалить изображение проекта', 'Overrides the "Remove featured image" phrase for this post type', 'belsks' ),
+		'use_featured_image'    => _x( 'Использовать как изображение проекта', 'Overrides the "Use as featured image" phrase for this post type', 'belsks' ),
+		'archives'              => _x( 'Архив проектов', 'The post type archive label', 'belsks' ),
+		'insert_into_item'      => _x( 'Добавить в проект', 'Overrides the "Insert into post" phrase for this post type', 'belsks' ),
+		'uploaded_to_this_item' => _x( 'Загружено для проекта', 'Overrides the "Uploaded to this post" phrase for this post type', 'belsks' ),
+		'filter_items_list'     => _x( 'Фильтр списка проектов', 'Overrides the "Filter items list" phrase for this post type', 'belsks' ),
+		'items_list_navigation' => _x( 'Навигация по списку проектов', 'Overrides the "Items list navigation" phrase for this post type', 'belsks' ),
+		'items_list'            => _x( 'Список проектов', 'Overrides the "Items list" phrase for this post type', 'belsks' ),
+	);
+
+	$args = array(
+		'labels'             => $labels,
+		'public'             => true,
+		'publicly_queryable' => true,
+		'show_ui'            => true,
+		'show_in_menu'       => true,
+		'query_var'          => true,
+		'rewrite'            => array( 'slug' => 'projects' ),
+		'capability_type'    => 'post',
+		'has_archive'        => true,
+		'hierarchical'       => false,
+		'menu_position'      => 21,
+		'supports'           => array( 'title', 'thumbnail', 'page-attributes' ),
+		'show_in_rest'       => true,
+		'menu_icon'          => 'dashicons-portfolio',
+		'sort_column'        => 'menu_order, post_date',
+	);
+
+	register_post_type( 'projects', $args );
+}
+add_action( 'init', 'belsks_register_projects_cpt' );
+
+/**
+ * Register ACF Fields for Projects
+ */
+function belsks_register_projects_acf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'      => 'group_projects_fields',
+			'title'    => 'Детали проекта',
+			'fields'   => array(
+				array(
+					'key'               => 'field_projects_image',
+					'label'             => 'Изображение проекта',
+					'name'              => 'project_image',
+					'type'              => 'image',
+					'instructions'      => 'Загрузите изображение проекта',
+					'required'          => 1,
+					'conditional_logic' => 0,
+					'wrapper'           => array(
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					),
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+					'min_width'         => '',
+					'min_height'        => '',
+					'min_size'          => '',
+					'max_width'         => '',
+					'max_height'        => '',
+					'max_size'          => '',
+					'mime_types'        => 'jpg,jpeg,png,webp',
+				),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'projects',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'hide_on_screen'        => '',
+			'active'                => true,
+			'description'           => '',
+			'show_in_rest'          => false,
+		) );
+	}
+}
+add_action( 'acf/init', 'belsks_register_projects_acf_fields' );
+

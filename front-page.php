@@ -49,7 +49,7 @@ get_header();
 				$catalog_page = get_page_by_title( 'Каталог' );
 				$catalog_url  = $catalog_page ? get_permalink( $catalog_page->ID ) : '#';
 				?>
-				<a href="<?php echo esc_url( $catalog_url ); ?>" class="inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-sm font-medium hover:bg-gray-50 transition-colors">
+				<a href="<?php echo esc_url( $catalog_url ); ?>" class="basic-directions-btn inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-sm font-medium hover:bg-gray-50 transition-colors">
 					Перейти в каталог
 				</a>
 			</div>
@@ -81,12 +81,11 @@ get_header();
 							<div class="h-[250px] bg-gray-100 overflow-hidden">
 								<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $category->name ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
 							</div>
-							<div class="p-6">
-								<h3 class="text-lg font-bold text-[#222222] mb-2"><?php echo esc_html( $category->name ); ?></h3>
-								<p class="text-sm text-gray-600 mb-4"><?php echo esc_html( $description ); ?></p>
-								<a href="<?php echo esc_url( $category_link ); ?>" class="bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
+							<div class="p-6 relative min-h-[226px]">
+								<h3 class="text-lg font-bold text-[#222222] mb-2 leading-[1.2]"><?php echo esc_html( $category->name ); ?></h3>
+								<p class="text-sm text-gray-600 mb-4 leading-[1.2]"><?php echo esc_html( $description ); ?></p>
+								<a href="<?php echo esc_url( $category_link ); ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
 									Подробнее
-									<i data-lucide="arrow-right" class="w-[16px] h-[16px]"></i>
 								</a>
 							</div>
 						</div>
@@ -99,101 +98,104 @@ get_header();
 	</section>
 
 	<!-- Services -->
-	<section class="py-16 lg:py-24 bg-[#f8fafc] dark:bg-gray-800">
+	<section class="py-16 lg:py-24 bg-[#f8fafc] services-section bg-[url('<?php the_field('sec3-bg') ?>')] bg-cover bg-center bg-no-repeat">
 		<div class="max-w-[1200px] mx-auto px-4">
-			<h2 class="text-3xl font-bold text-[#222222] mb-12">Услуги</h2>
+			<h2 class="text-3xl font-bold text-[#222222] mb-12"><?php the_field('sec3_heading') ?></h2>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-				<!-- Service 1 -->
-				<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 text-[#1e3a5f]">
-						<i data-lucide="lightbulb" class="w-6 h-6"></i>
-					</div>
-					<h3 class="text-lg font-bold text-[#222222] mb-2">Разработка концепции</h3>
-					<p class="text-sm text-gray-600 mb-4">Формируем оптимальную логистическую схему хранения, перемещения и обработки грузов.</p>
-					<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-						Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-					</a>
-				</div>
+				<?php
+				$services_query = new WP_Query( array(
+					'post_type'      => 'services',
+					'posts_per_page' => 4,
+					'orderby'        => 'menu_order',
+					'order'          => 'ASC',
+				) );
 
-				<!-- Service 2 -->
-				<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 text-[#1e3a5f]">
-						<i data-lucide="blueprint" class="w-6 h-6"></i>
-					</div>
-					<h3 class="text-lg font-bold text-[#222222] mb-2">Индивидуальные проекты</h3>
-					<p class="text-sm text-gray-600 mb-4">Подбираем решения под конкретные задачи объекта и специфику бизнеса.</p>
-					<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-						Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-					</a>
-				</div>
+				if ( $services_query->have_posts() ) {
+					while ( $services_query->have_posts() ) {
+						$services_query->the_post();
+						$icon_url = get_field( 'service_icon' );
+						$icon_src = is_array( $icon_url ) ? $icon_url['url'] : '';
+						?>
+						<div class="bg-white dark:bg-gray-800 relative min-h-[226px] p-[20px] shadow-sm hover:shadow-md transition-shadow">
+						<div class="flex items-center">
+							<div class="w-12 h-12 flex items-center justify-center mb-4 text-[#1e3a5f] dark:text-gray-100 mr-[10px]">
+								<?php if ( $icon_src ) : ?>
+									<img src="<?php echo esc_url( $icon_src ); ?>" alt="<?php the_title_attribute(); ?>" class="min-w-[58px] h-[44px]">
+								<?php else : ?>
+									<i data-lucide="lightbulb" class="w-6 h-6"></i>
+								<?php endif; ?>
+							</div>
+							<h3 class="text-lg font-bold text-[#222222] leading-[1.2] dark:text-gray-100 mb-2"><?php the_title(); ?></h3>
+							</div>
+							<p class="text-base font-normal leading-[1.2] text-gray-600 dark:text-gray-300 mb-4"><?php echo esc_html( wp_strip_all_tags( get_field( 'service_description' ) ?: get_the_excerpt() ) ); ?></p>
+							<a href="<?php echo esc_url( $category_link ); ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
+							Подробнее
+							</a>
 
-				<!-- Service 3 -->
-				<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 text-[#1e3a5f]">
-						<i data-lucide="wrench" class="w-6 h-6"></i>
-					</div>
-					<h3 class="text-lg font-bold text-[#222222] mb-2">Монтажные работы</h3>
-					<p class="text-sm text-gray-600 mb-4">Организуем профессиональный монтаж оборудования с контролем качества.</p>
-					<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-						Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-					</a>
-				</div>
-
-				<!-- Service 4 -->
-				<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-					<div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 text-[#1e3a5f]">
-						<i data-lucide="settings" class="w-6 h-6"></i>
-					</div>
-					<h3 class="text-lg font-bold text-[#222222] mb-2">Сервисное обслуживание</h3>
-					<p class="text-sm text-gray-600 mb-4">Обеспечиваем сопровождение для стабильной и безопасной эксплуатации.</p>
-					<a href="#" class="text-[#1e3a5f] font-medium text-sm hover:underline inline-flex items-center gap-1">
-						Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
-					</a>
-				</div>
+						</div>
+						<?php
+					}
+					wp_reset_postdata();
+				} else {
+					// Fallback static cards if no services
+					for ( $i = 0; $i < 4; $i++ ) {
+						?>
+						<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+							<div class="w-12 h-12 bg-blue-50 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4 text-[#1e3a5f] dark:text-gray-100">
+								<i data-lucide="lightbulb" class="w-6 h-6"></i>
+							</div>
+							<h3 class="text-lg font-bold text-[#222222] dark:text-gray-100 mb-2">Услуга <?php echo $i + 1; ?></h3>
+							<p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Описание услуги.</p>
+							<a href="#" class="text-[#1e3a5f] dark:text-gray-100 font-medium text-sm hover:underline inline-flex items-center gap-1">
+								Подробнее <i data-lucide="arrow-right" class="w-3 h-3"></i>
+							</a>
+						</div>
+						<?php
+					}
+				}
+				?>
 			</div>
 		</div>
 	</section>
 
 	<!-- About Section -->
-	<section class="py-16 lg:py-24 bg-white dark:bg-gray-900">
-		<div class="max-w-[1200px] mx-auto px-4">
+	<section class="py-16 lg:py-24 bg-white dark:bg-gray-900 bg-[url('<?php the_field('sec4-bg') ?>')] bg-cover bg-center bg-no-repeat about-section">
+		<div class="max-w-[1200px] mx-auto px-4 flex-col md:flex items-center">
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 				<!-- Text Content -->
-				<div>
-					<h2 class="text-3xl font-bold text-[#222222] mb-4">БелСКС логистик —<br>инженерный подход к складским решениям</h2>
-					<p class="text-gray-600 mb-6">
-						Мы помогаем компаниям подобрать и внедрить решения для хранения, перемещения и организации рабочих пространств. В центре внимания — надёжность, эффективность и адаптация под реальные задачи бизнеса.
+				<div class="max-w-[484px]">
+					<h2 class="text-[44px] font-bold text-[#222222]"><?php the_field('sec4_heading') ?></h2>
+					<h3 class="text-lg font-bold text-[#222222] mb-4"><?php the_field('sec4_subheading') ?></h3>
+					<p class="text-gray-600 mb-3 text-base leading-[1.2]">
+						<?php the_field('sec4_description') ?>
 					</p>
-					<p class="text-gray-600 mb-8">
-						За 20 лет работы мы реализовали свыше 1 600 проектов, установили больше семи километров конвейеров и более миллиона паллетомест.
+					<p class="text-gray-600 mb-8 text-base leading-[1.2]">
+						<?php the_field('sec4_description2') ?>
 					</p>
-					<a href="#" class="inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#162d4a] transition-colors">
+				<?php
+					$about_page = get_page_by_title( 'О Компании' );
+					$about_url  = $about_page ? get_permalink( $about_page->ID ) : '#';
+				?>
+					<a href="<?php echo esc_url( $about_url ); ?>" class="basic-directions-btn inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-sm font-medium hover:bg-gray-50 transition-colors">
 						Подробнее о компании
 					</a>
 				</div>
 
 				<!-- Image & Features -->
 				<div class="relative">
-					<div class="rounded-xl overflow-hidden shadow-lg mb-6">
-						<img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Robot+Arm" alt="Robot" class="w-full h-auto">
+					<div class="overflow-hidden shadow-lg mb-6">
+						<img src="<?php the_field('sec4_img-right') ?>" alt="Robot" class="w-full h-auto md:min-h-[472px] md:min-w-[588px]">
 					</div>
-					<div class="grid grid-cols-2 gap-4">
-						<div class="bg-white p-4 rounded-lg shadow-md border border-gray-100 flex items-start gap-3">
-							<div class="w-10 h-10 bg-blue-50 rounded flex items-center justify-center text-[#1e3a5f] flex-shrink-0">
-								<i data-lucide="clipboard-check" class="w-5 h-5"></i>
-							</div>
-							<div>
-								<h4 class="font-bold text-[#222222] text-sm">Подбор под задачи объекта</h4>
-							</div>
+					<div class="grid grid-cols-2 gap-4 absolute bottom-[0px] max-w-[548px] pl-4">
+						<div class="bg-white p-[20px] shadow-md flex items-start gap-[10px] flex flex-col">
+							<img src="<?php the_field('sec4_icon1') ?>" class="" />
+							<h4 class="font-bold text-[#222222] text-lg leading-[1.2]"><?php the_field('sec4_title1') ?></h4>
 						</div>
-						<div class="bg-white p-4 rounded-lg shadow-md border border-gray-100 flex items-start gap-3">
-							<div class="w-10 h-10 bg-blue-50 rounded flex items-center justify-center text-[#1e3a5f] flex-shrink-0">
-								<i data-lucide="shield-check" class="w-5 h-5"></i>
-							</div>
-							<div>
-								<h4 class="font-bold text-[#222222] text-sm">Надёжные решения для B2B</h4>
-							</div>
+						<div class="bg-white p-[20px] shadow-md flex items-start gap-[10px] flex flex-col">
+							<img src="<?php the_field('sec4_icon1') ?>" class="" />
+							<h4 class="font-bold text-[#222222] text-lg leading-[1.2]"><?php the_field('sec4_title2') ?></h4>
+						</div>
 						</div>
 					</div>
 				</div>
@@ -202,38 +204,86 @@ get_header();
 	</section>
 
 	<!-- Projects Section -->
-	<section class="py-16 lg:py-24 bg-[#f8fafc] dark:bg-gray-800">
+	<section class="py-16 lg:py-24 bg-[#f8fafc] dark:bg-gray-900 bg-[url('<?php the_field('sec5_bg') ?>')] bg-cover bg-center bg-no-repeat projects-section">
 		<div class="max-w-[1200px] mx-auto px-4">
 			<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-4">
-				<h2 class="text-3xl font-bold text-[#222222]">Реализованные проекты</h2>
-				<a href="#" class="text-[#1e3a5f] font-medium hover:underline flex items-center gap-1">
+				<h2 class="text-3xl font-bold text-[#222222] dark:text-gray-100"><?php the_field('sec5_heading'); ?></h2>
+				<?php
+					$projects_page = get_page_by_title( 'Проекты' );
+					$projects_url  = $projects_page ? get_permalink( $projects_page->ID ) : '#';
+				?>
+				<a href="<?php echo esc_url( $projects_url ); ?>" class="basic-directions-btn inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-sm font-medium hover:bg-gray-50 transition-colors">
 					Показать больше проектов
-					<i data-lucide="arrow-right" class="w-4 h-4"></i>
 				</a>
 			</div>
 
+			<?php
+			$projects_query = new WP_Query( array(
+				'post_type'      => 'projects',
+				'posts_per_page' => 5,
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+			) );
+
+			$projects = array();
+			if ( $projects_query->have_posts() ) {
+				while ( $projects_query->have_posts() ) {
+					$projects_query->the_post();
+					$projects[] = array(
+						'title' => get_the_title(),
+						'image' => get_field( 'project_image' ),
+					);
+				}
+				wp_reset_postdata();
+			}
+
+			// Fill missing projects with placeholders if less than 5
+			while ( count( $projects ) < 5 ) {
+				$projects[] = array( 'title' => 'Проект', 'image' => null );
+			}
+			?>
+
+			<!-- First Row: 3 items (1 large, 2 small) -->
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				<!-- Project 1 (Large) -->
-				<div class="md:col-span-2 lg:col-span-2 row-span-2 rounded-xl overflow-hidden group relative min-h-[400px]">
-					<img src="https://placehold.co/800x600/e2e8f0/94a3b8?text=Project+1" alt="Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+				<div class="md:col-span-2 lg:col-span-2 row-span-2 overflow-hidden group relative min-h-[400px]">
+					<?php if ( $projects[0]['image'] && is_array( $projects[0]['image'] ) ) : ?>
+						<img src="<?php echo esc_url( $projects[0]['image']['url'] ); ?>" alt="<?php echo esc_attr( $projects[0]['title'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+					<?php else : ?>
+						<div class="w-full h-full bg-gray-200 flex items-center justify-center">
+							<span class="text-gray-400">Нет изображения</span>
+						</div>
+					<?php endif; ?>
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-						<span class="text-white font-medium">Название проекта</span>
+						<span class="text-white font-medium"><?php echo esc_html( $projects[0]['title'] ); ?></span>
 					</div>
 				</div>
 
 				<!-- Project 2 -->
-				<div class="rounded-xl overflow-hidden group relative h-full min-h-[190px]">
-					<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=Project+2" alt="Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+				<div class="overflow-hidden group relative h-full min-h-[190px]">
+					<?php if ( $projects[1]['image'] && is_array( $projects[1]['image'] ) ) : ?>
+						<img src="<?php echo esc_url( $projects[1]['image']['url'] ); ?>" alt="<?php echo esc_attr( $projects[1]['title'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+					<?php else : ?>
+						<div class="w-full h-full bg-gray-200 flex items-center justify-center">
+							<span class="text-gray-400">Нет изображения</span>
+						</div>
+					<?php endif; ?>
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-						<span class="text-white font-medium">Название проекта</span>
+						<span class="text-white font-medium"><?php echo esc_html( $projects[1]['title'] ); ?></span>
 					</div>
 				</div>
 
 				<!-- Project 3 -->
-				<div class="rounded-xl overflow-hidden group relative h-full min-h-[190px]">
-					<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=Project+3" alt="Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+				<div class="overflow-hidden group relative h-full min-h-[190px]">
+					<?php if ( $projects[2]['image'] && is_array( $projects[2]['image'] ) ) : ?>
+						<img src="<?php echo esc_url( $projects[2]['image']['url'] ); ?>" alt="<?php echo esc_attr( $projects[2]['title'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+					<?php else : ?>
+						<div class="w-full h-full bg-gray-200 flex items-center justify-center">
+							<span class="text-gray-400">Нет изображения</span>
+						</div>
+					<?php endif; ?>
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-						<span class="text-white font-medium">Название проекта</span>
+						<span class="text-white font-medium"><?php echo esc_html( $projects[2]['title'] ); ?></span>
 					</div>
 				</div>
 			</div>
@@ -241,18 +291,30 @@ get_header();
 			<!-- Projects 4 & 5 (Full width row) -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 				<!-- Project 4 -->
-				<div class="rounded-xl overflow-hidden group relative h-64">
-					<img src="https://placehold.co/600x300/e2e8f0/94a3b8?text=Project+4" alt="Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+				<div class="overflow-hidden group relative h-64">
+					<?php if ( $projects[3]['image'] && is_array( $projects[3]['image'] ) ) : ?>
+						<img src="<?php echo esc_url( $projects[3]['image']['url'] ); ?>" alt="<?php echo esc_attr( $projects[3]['title'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+					<?php else : ?>
+						<div class="w-full h-full bg-gray-200 flex items-center justify-center">
+							<span class="text-gray-400">Нет изображения</span>
+						</div>
+					<?php endif; ?>
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-						<span class="text-white font-medium">Название проекта</span>
+						<span class="text-white font-medium"><?php echo esc_html( $projects[3]['title'] ); ?></span>
 					</div>
 				</div>
 
 				<!-- Project 5 -->
-				<div class="rounded-xl overflow-hidden group relative h-64">
-					<img src="https://placehold.co/600x300/e2e8f0/94a3b8?text=Project+5" alt="Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+				<div class="overflow-hidden group relative h-64">
+					<?php if ( $projects[4]['image'] && is_array( $projects[4]['image'] ) ) : ?>
+						<img src="<?php echo esc_url( $projects[4]['image']['url'] ); ?>" alt="<?php echo esc_attr( $projects[4]['title'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+					<?php else : ?>
+						<div class="w-full h-full bg-gray-200 flex items-center justify-center">
+							<span class="text-gray-400">Нет изображения</span>
+						</div>
+					<?php endif; ?>
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-						<span class="text-white font-medium">Название проекта</span>
+						<span class="text-white font-medium"><?php echo esc_html( $projects[4]['title'] ); ?></span>
 					</div>
 				</div>
 			</div>

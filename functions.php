@@ -112,6 +112,11 @@ function belsks_setup() {
 			'flex-height' => true,
 		)
 	);
+
+	add_theme_support( 'woocommerce' );
+	add_theme_support( 'wc-product-gallery-zoom' );
+	add_theme_support( 'wc-product-gallery-lightbox' );
+	add_theme_support( 'wc-product-gallery-slider' );
 }
 add_action( 'after_setup_theme', 'belsks_setup' );
 

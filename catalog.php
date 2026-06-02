@@ -35,10 +35,11 @@ get_header();
 
 		<ul class="space-y-4">
 			<?php
+			$uncategorized_id = (int) get_option( 'default_product_cat' );
 			$parent_categories = get_terms( array(
 				'taxonomy'   => 'product_cat',
 				'hide_empty' => false,
-				'exclude'    => array( 1 ),
+				'exclude'    => $uncategorized_id ? array( $uncategorized_id ) : array(),
 				'parent'     => 0,
 				'number'     => 999,
 				'orderby'    => 'name',
@@ -105,7 +106,7 @@ get_header();
 		$categories = get_terms( array(
 			'taxonomy'   => 'product_cat',
 			'hide_empty' => false,
-			'exclude'    => array( 1 ),
+			'exclude'    => $uncategorized_id ? array( $uncategorized_id ) : array(),
 			'parent'     => 0,
 			'number'     => 999,
 			'orderby'    => 'name',

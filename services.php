@@ -15,7 +15,7 @@ get_header();
       <div class="absolute top-0 left-[60%] w-px h-full bg-gradient-to-b from-transparent via-gray-200 to-transparent opacity-40 -skew-x-12"></div>
     </div>
 
-    <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+    <div class="max-w-[1200px] md:mt-12 mx-auto px-6 relative z-10">
 
       <!-- Breadcrumbs -->
       <nav class="text-sm text-gray-500 mb-6">

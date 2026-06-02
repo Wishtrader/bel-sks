@@ -13,7 +13,7 @@
                 </div>
 
                 <!-- Right column: form (2/3) -->
-                <form class="bg-white md:min-w-[700px] shadow-lg rounded-sm border border-gray-100 p-6 sm:p-8 lg:col-span-2" onsubmit="event.preventDefault(); alert('Спасибо!");">
+                <form class="bg-white md:min-w-[700px] shadow-lg rounded-sm border border-gray-100 p-6 sm:p-8 lg:col-span-2">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                         <!-- Name -->
                         <div class="sm:col-span-1">
@@ -33,8 +33,8 @@
                     </div>
 
                     <!-- Contact method -->
-                    <div class="mb-6 flex items-center">
-                        <p class="text-sm font-semibold text-[#294F78] mr-2">Предпочтительный способ связи:</p>
+                    <div class="mb-2 sm:flex-col md:flex md:flex-row items-center">
+                        <p class="text-sm font-semibold text-[#294F78] mr-2 mb-2 md:mb-0">Предпочтительный способ связи:</p>
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
                             <label class="flex items-center cursor-pointer">
                                 <input type="radio" name="contact_method" value="phone" class="w-4 h-4 text-blue-600 contact-method-radio" checked>

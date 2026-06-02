@@ -161,8 +161,9 @@ get_header();
       </div>
     </div>
   </section>
+	<!-- Contact form section -->
+<?php get_template_part( 'template-parts/contact-form', 'form' ); ?>
 </main>
-</body
 
 <?php
 get_footer();

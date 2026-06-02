@@ -408,7 +408,6 @@ get_header();
     </div>
   </section>
 </main>
-</body
 
 <?php
 get_footer();

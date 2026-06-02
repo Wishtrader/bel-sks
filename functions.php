@@ -13,6 +13,19 @@ if ( ! defined( '_S_VERSION' ) ) {
 }
 
 /**
+ * Enqueue Google Fonts (Inter)
+ */
+function belsks_enqueue_fonts() {
+	wp_enqueue_style(
+		'inter-font',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+		array(),
+		null
+	);
+}
+add_action( 'wp_enqueue_scripts', 'belsks_enqueue_fonts' );
+
+/**
  * Sets up theme defaults and registers support for various WordPress features.
  *
  * Note that this function is hooked into the after_setup_theme hook, which
@@ -565,4 +578,23 @@ function belsks_handle_post_duplicate() {
 	}
 }
 add_action( 'admin_init', 'belsks_handle_post_duplicate' );
+
+/**
+ * Load contact form handler
+ */
+require get_template_directory() . '/inc/contact-form-handler.php';
+
+/**
+ * Enqueue contact form script
+ */
+function belsks_enqueue_contact_form_script() {
+	wp_enqueue_script(
+		'belsks-contact-form',
+		get_template_directory_uri() . '/js/contact-form.js',
+		array(),
+		wp_get_theme()->get( 'Version' ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'belsks_enqueue_contact_form_script' );
 

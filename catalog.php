@@ -17,7 +17,7 @@ get_header();
   </div>
 
   <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-    <nav class="mb-8 text-[15px] leading-none text-slate-500 sm:mb-10">
+    <nav class="mb-8 text-[15px] leading-none text-slate-500 sm:mb-10 md:mt-12">
       <a href="#" class="transition-colors hover:text-slate-700">Главная</a>
       <span class="mx-2 text-slate-400">/</span>
       <span class="text-slate-600">Каталог</span>
@@ -29,104 +29,96 @@ get_header();
 
     <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)] lg:items-start">
       <aside class="rounded-sm border border-slate-200 bg-white p-4 shadow-[0_2px_12px_rgba(15,23,42,0.08)] sm:p-6">
-        <div class="mb-4 inline-flex rounded-md bg-[#3d5f86] px-5 py-2 text-[18px] font-semibold leading-none text-white">
-          Каталог
-        </div>
+		<div class="mb-4 inline-flex rounded-md bg-[#3d5f86] px-5 py-2 text-[18px] font-semibold leading-none text-white">
+			Каталог
+		</div>
 
-        <ul class="space-y-4">
-          <li>
-            <a href="#" class="flex items-center justify-between gap-4 text-[20px] font-semibold leading-snug text-[#3f5d7e] transition-colors hover:text-slate-900">
-              <span>Стеллажные системы</span>
-              <svg class="h-5 w-5 shrink-0 text-[#3f5d7e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 19V5" />
-                <path d="M5 12l7-7 7 7" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-between gap-4 text-[20px] font-semibold leading-snug text-[#3f5d7e] transition-colors hover:text-slate-900">
-              <span>Автоматизированные системы</span>
-              <svg class="h-5 w-5 shrink-0 text-[#3f5d7e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14" />
-                <path d="M19 12l-7 7-7-7" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-between gap-4 text-[20px] font-semibold leading-snug text-[#3f5d7e] transition-colors hover:text-slate-900">
-              <span>Конвейеры и комплектующие</span>
-              <svg class="h-5 w-5 shrink-0 text-[#3f5d7e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14" />
-                <path d="M19 12l-7 7-7-7" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-between gap-4 text-[20px] font-semibold leading-snug text-[#3f5d7e] transition-colors hover:text-slate-900">
-              <span>Производственная мебель</span>
-              <svg class="h-5 w-5 shrink-0 text-[#3f5d7e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14" />
-                <path d="M19 12l-7 7-7-7" />
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </aside>
+		<ul class="space-y-4">
+			<?php
+			$categories = get_terms( array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+				'exclude'    => array( 1 ),
+				'number'     => 999,
+			) );
 
-      <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        <article class="overflow-hidden bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)]">
-          <div class="h-52 bg-[linear-gradient(135deg,#d9e0ea_0%,#9fb2c7_45%,#c7d0db_100%)] sm:h-56"></div>
-          <div class="p-5">
-            <h2 class="mb-3 text-[18px] font-bold leading-snug text-slate-900">
-              Стеллажные системы
-            </h2>
-            <p class="text-[17px] leading-snug text-slate-600">
-              Надёжные решения для хранения и рациональной организации складского пространства.
-            </p>
-          </div>
-        </article>
+			if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+				foreach ( $categories as $category ) {
+					// Skip Uncategorized category
+					if ( strtolower( $category->name ) === 'uncategorized' || $category->slug === 'uncategorized' ) {
+						continue;
+					}
+					$category_link = get_term_link( $category );
+					?>
+					<li>
+						<a href="<?php echo esc_url( $category_link ); ?>" class="flex items-center justify-between gap-4 text-[18px] font-semibold leading-snug text-[#3f5d7e] transition-colors hover:text-slate-900">
+							<span><?php echo esc_html( $category->name ); ?></span>
+							<svg class="h-5 w-5 shrink-0 text-[#3f5d7e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M12 19V5" />
+								<path d="M5 12l7-7 7 7" />
+							</svg>
+						</a>
+					</li>
+					<?php
+				}
+			}
+			?>
+		</ul>
+	</aside>
 
-        <article class="overflow-hidden bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)]">
-          <div class="h-52 bg-[linear-gradient(135deg,#d8e1ee_0%,#7e97b3_45%,#c9d2de_100%)] sm:h-56"></div>
-          <div class="p-5">
-            <h2 class="mb-3 text-[18px] font-bold leading-snug text-slate-900">
-              Автоматизированные системы
-            </h2>
-            <p class="text-[17px] leading-snug text-slate-600">
-              Надёжные решения для хранения и рациональной организации складского пространства.
-            </p>
-          </div>
-        </article>
+	<div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+		<?php
+		$categories = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => false,
+			'exclude'    => array( 1 ),
+			'number'     => 999,
+		) );
 
-        <article class="overflow-hidden bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)]">
-          <div class="h-52 bg-[linear-gradient(135deg,#e4e7ee_0%,#adb7c8_45%,#d7dde6_100%)] sm:h-56"></div>
-          <div class="p-5">
-            <h2 class="mb-3 text-[18px] font-bold leading-snug text-slate-900">
-              Конвейеры и комплектующие
-            </h2>
-            <p class="text-[17px] leading-snug text-slate-600">
-              Оборудование для перемещения, сортировки и внутренней логистики грузов.
-            </p>
-          </div>
-        </article>
+		if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+			foreach ( $categories as $category ) {
+				// Skip Uncategorized category
+				if ( strtolower( $category->name ) === 'uncategorized' || $category->slug === 'uncategorized' ) {
+					continue;
+				}
+				$thumbnail_id = get_term_meta( $category->term_id, 'thumbnail_id', true );
+				$image_url    = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'medium' ) : '';
 
-        <article class="overflow-hidden bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)] sm:col-span-2 xl:col-span-1">
-          <div class="h-52 bg-[linear-gradient(135deg,#cfd7e4_0%,#8b9db7_45%,#d9e1ec_100%)] sm:h-56"></div>
-          <div class="p-5">
-            <h2 class="mb-3 text-[18px] font-bold leading-snug text-slate-900">
-              Производственная мебель
-            </h2>
-            <p class="text-[17px] leading-snug text-slate-600">
-              Оснащение рабочих и производственных зон с учётом практических задач предприятия.
-            </p>
-          </div>
-        </article>
-      </div>
+				if ( ! $image_url ) {
+					$image_url = 'https://placehold.co/400x300/e2e8f0/94a3b8?text=' . urlencode( $category->name );
+				}
+
+				$category_link = get_term_link( $category );
+				$description = ! empty( $category->description ) ? $category->description : 'Категория товаров для вашего склада.';
+				?>
+				<article class="overflow-hidden bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)]">
+					<div class="h-[160px] bg-slate-100 flex items-center justify-center overflow-hidden">
+						<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $category->name ); ?>" class="w-full h-full object-cover">
+					</div>
+					<div class="p-5">
+						<h2 class="mb-3 text-[18px] font-bold leading-snug text-slate-900">
+							<a href="<?php echo esc_url( $category_link ); ?>" class="hover:text-[#3d5f86]"><?php echo esc_html( $category->name ); ?></a>
+						</h2>
+						<p class="text-[16px] leading-snug text-slate-600">
+							<?php echo esc_html( wp_trim_words( $description, 15, '...' ) ); ?>
+						</p>
+					</div>
+				</article>
+				<?php
+			}
+		} else {
+			?>
+			<p class="col-span-3 text-center text-slate-600">Категории не найдены.</p>
+			<?php
+		}
+		?>
+	</div>
     </div>
   </div>
 </section>
+<!-- Contact form section -->
+<?php get_template_part( 'template-parts/contact-form', 'form' ); ?>
 </main>
-</body
 
 <?php
 get_footer();

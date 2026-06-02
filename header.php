@@ -31,7 +31,7 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'belsks' ); ?></a>
 
-	<header id="masthead" class="site-header shadow-md fixed top-0 left-0 right-0 z-50 lg:sticky lg:top-0">
+	<header id="masthead" class="site-header shadow-md fixed top-0 left-0 right-0 z-50">
 		<div class="max-w-[1200px] mx-auto px-4">
 			<div class="flex items-center gap-8">
 				<!-- Logo -->

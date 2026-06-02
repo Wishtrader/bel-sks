@@ -322,134 +322,69 @@ get_header();
 	</section>
 
 	<!-- News Section -->
-	<section class="py-16 lg:py-24 bg-white dark:bg-gray-900">
+	<section class="py-16 lg:py-24 bg-white dark:bg-gray-900 news-section bg-[url('<?php the_field('sec6_bg') ?>')] bg-cover bg-center bg-no-repeat">
 		<div class="max-w-[1200px] mx-auto px-4">
 			<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-4">
-				<h2 class="text-3xl font-bold text-[#222222]">Новости и статьи</h2>
-				<a href="#" class="text-[#1e3a5f] font-medium hover:underline flex items-center gap-1">
+				<h2 class="text-3xl font-bold text-[#222222] dark:text-gray-100"><?php the_field('sec6_heading') ?></h2>
+				<a href="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>" class="text-[#1e3a5f] dark:text-gray-100 font-medium hover:underline flex items-center gap-1">
 					К другим новостям
 					<i data-lucide="arrow-right" class="w-4 h-4"></i>
 				</a>
 			</div>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-				<!-- News Card 1 -->
-				<div class="group cursor-pointer">
-					<div class="rounded-xl overflow-hidden mb-4 h-48 bg-gray-100">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=News+1" alt="News" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<p class="text-xs text-gray-500 mb-2">15 Января 2025</p>
-					<h3 class="text-base font-bold text-[#222222] group-hover:text-[#1e3a5f] transition-colors line-clamp-2">Как выбрать стеллажную систему под задачи склада</h3>
-				</div>
+				<?php
+				$news_query = new WP_Query( array(
+					'post_type'      => 'post',
+					'posts_per_page' => 4,
+					'orderby'        => 'date',
+					'order'          => 'DESC',
+				) );
 
-				<!-- News Card 2 -->
-				<div class="group cursor-pointer">
-					<div class="rounded-xl overflow-hidden mb-4 h-48 bg-gray-100">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=News+2" alt="News" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<p class="text-xs text-gray-500 mb-2">15 Января 2025</p>
-					<h3 class="text-base font-bold text-[#222222] group-hover:text-[#1e3a5f] transition-colors line-clamp-2">Как выбрать стеллажную систему под задачи склада</h3>
-				</div>
-
-				<!-- News Card 3 -->
-				<div class="group cursor-pointer">
-					<div class="rounded-xl overflow-hidden mb-4 h-48 bg-gray-100">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=News+3" alt="News" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<p class="text-xs text-gray-500 mb-2">15 Января 2025</p>
-					<h3 class="text-base font-bold text-[#222222] group-hover:text-[#1e3a5f] transition-colors line-clamp-2">Как выбрать стеллажную систему под задачи склада</h3>
-				</div>
-
-				<!-- News Card 4 -->
-				<div class="group cursor-pointer">
-					<div class="rounded-xl overflow-hidden mb-4 h-48 bg-gray-100">
-						<img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=News+4" alt="News" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-					</div>
-					<p class="text-xs text-gray-500 mb-2">15 Января 2025</p>
-					<h3 class="text-base font-bold text-[#222222] group-hover:text-[#1e3a5f] transition-colors line-clamp-2">Как выбрать стеллажную систему под задачи склада</h3>
-				</div>
+				if ( $news_query->have_posts() ) {
+					while ( $news_query->have_posts() ) {
+						$news_query->the_post();
+						?>
+						<a href="<?php the_permalink(); ?>" class="group cursor-pointer block bg-white">
+							<div class="overflow-hidden mb-4 h-48 bg-white ">
+								<?php if ( has_post_thumbnail() ) : ?>
+									<?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300' ) ); ?>
+								<?php else : ?>
+									<div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+										<span class="text-gray-400 text-xs">Нет фото</span>
+									</div>
+								<?php endif; ?>
+							</div>
+							<p class="text-xs text-gray-500 dark:text-gray-400 mb-2"><?php echo esc_html( get_the_date( 'd F Y' ) ); ?></p>
+							<h3 class="text-base font-bold text-[#222222] dark:text-gray-100 group-hover:text-[#1e3a5f] dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+								<?php the_title(); ?>
+							</h3>
+						</a>
+						<?php
+					}
+					wp_reset_postdata();
+				} else {
+					// Fallback static cards if no posts
+					for ( $i = 0; $i < 4; $i++ ) {
+						?>
+						<div class="group cursor-pointer">
+							<div class="rounded-xl overflow-hidden mb-4 h-48 bg-white">
+								<div class="w-full h-full bg-gray-200 flex items-center justify-center">
+									<span class="text-gray-400 text-xs">Новость <?php echo $i + 1; ?></span>
+								</div>
+							</div>
+							<p class="text-xs text-gray-500 mb-2">15 Января 2025</p>
+							<h3 class="text-base font-bold text-[#222222] group-hover:text-[#1e3a5f] transition-colors line-clamp-2">Заголовок новости</h3>
+						</div>
+						<?php
+					}
+				}
+				?>
 			</div>
 		</div>
 	</section>
-
-	<!-- Contact Form Section -->
-	<section class="relative py-16 lg:py-24 overflow-hidden">
-		<!-- Background -->
-		<div class="absolute inset-0 bg-gray-200 dark:bg-gray-800">
-			<img src="https://placehold.co/1920x800/e2e8f0/94a3b8?text=Contact+BG" alt="Background" class="w-full h-full object-cover">
-			<div class="absolute inset-0 bg-white/80 overlay-light dark:hidden"></div>
-			<div class="absolute inset-0 bg-gray-900/80 overlay-dark hidden dark:block"></div>
-		</div>
-
-		<div class="relative max-w-[1200px] mx-auto px-4">
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-				<!-- Left Text -->
-				<div>
-					<h2 class="text-3xl font-bold text-[#222222] mb-4">Обсудим вашу задачу?</h2>
-					<p class="text-gray-600">
-						Свяжитесь с нами, чтобы получить консультацию, подобрать решения и запросить коммерческое предложение.
-					</p>
-				</div>
-
-				<!-- Form -->
-				<div class="bg-white p-8 rounded-2xl shadow-lg">
-					<form class="space-y-4">
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Ваше имя *</label>
-								<input type="text" placeholder="Ваше имя" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Укажите телефон или e-mail *</label>
-								<input type="text" placeholder="+375 (__) ___-__-__" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
-							</div>
-						</div>
-
-						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">Предпочтительный способ связи:</label>
-							<div class="flex flex-wrap gap-4">
-								<label class="flex items-center gap-2 cursor-pointer">
-									<input type="radio" name="contact_method" value="phone" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-									<span class="text-sm text-gray-600">Телефон</span>
-								</label>
-								<label class="flex items-center gap-2 cursor-pointer">
-									<input type="radio" name="contact_method" value="viber" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-									<span class="text-sm text-gray-600">Viber</span>
-								</label>
-								<label class="flex items-center gap-2 cursor-pointer">
-									<input type="radio" name="contact_method" value="whatsapp" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-									<span class="text-sm text-gray-600">WhatsApp</span>
-								</label>
-								<label class="flex items-center gap-2 cursor-pointer">
-									<input type="radio" name="contact_method" value="telegram" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-									<span class="text-sm text-gray-600">Telegram</span>
-								</label>
-								<label class="flex items-center gap-2 cursor-pointer">
-									<input type="radio" name="contact_method" value="email" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-									<span class="text-sm text-gray-600">E-mail</span>
-								</label>
-							</div>
-						</div>
-
-						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-1">Комментарий</label>
-							<textarea rows="3" placeholder="Опишите вашу задачу" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none"></textarea>
-						</div>
-
-						<div class="flex items-start gap-2">
-							<input type="checkbox" id="privacy" class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-							<label for="privacy" class="text-xs text-gray-500">Соглашаюсь с политикой обработки персональных данных</label>
-						</div>
-
-						<button type="submit" class="w-full bg-[#1e3a5f] text-white py-3 rounded-lg font-medium hover:bg-[#162d4a] transition-colors">
-							Отправить заявку
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</section>
-
+	<!-- Contact form section -->
+<?php get_template_part( 'template-parts/contact-form', 'form' ); ?>
 </main>
 
 <?php

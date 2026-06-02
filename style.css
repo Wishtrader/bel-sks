@@ -557,3 +557,100 @@ body.menu-open {
 .dark .projects-section .basic-directions-btn:hover {
 	background-color: #374151 !important;
 }
+
+/* Single post text styles */
+.single-post .entry-content,
+.single-post .entry-content p,
+.single-post article p,
+.single-post .max-w-4xl {
+	color: #000000 !important;
+}
+
+.dark .single-post .entry-content,
+.dark .single-post .entry-content p,
+.dark .single-post article p,
+.dark .single-post .max-w-4xl {
+	color: #f3f4f6 !important;
+}
+
+/* Related section heading */
+.single-post section h2 {
+	color: #222222 !important;
+}
+
+.dark .single-post section h2 {
+	color: #f3f4f6 !important;
+}
+
+/* Related section cards */
+.single-post section a.group {
+	background-color: #ffffff !important;
+}
+
+.single-post section a.group h3 {
+	color: #222222 !important;
+}
+
+.single-post section a.group .text-gray-400 {
+	color: #6b7280 !important;
+}
+
+.dark .single-post section a.group {
+	background-color: #1f2937 !important;
+}
+
+.dark .single-post section a.group h3 {
+	color: #f3f4f6 !important;
+}
+
+.dark .single-post section a.group .text-gray-400 {
+	color: #9ca3af !important;
+}
+
+/* Dark mode for "News" section */
+.dark .news-section {
+	background-color: #111827 !important;
+	background-image: none !important;
+}
+
+.news-section .bg-gray-100 {
+	background-color: #ffffff !important;
+}
+
+.dark .news-section .bg-gray-100 {
+	background-color: #1f2937 !important;
+}
+
+.news-section .text-gray-500 {
+	color: #6b7280 !important;
+}
+
+.dark .news-section .text-gray-500 {
+	color: #9ca3af !important;
+}
+
+.news-section h2,
+.news-section .text-\[\#222222\] {
+	color: #222222 !important;
+}
+
+.dark .news-section h2,
+.dark .news-section .text-\[\#222222\] {
+	color: #f3f4f6 !important;
+}
+
+.news-section h3 {
+	color: #222222 !important;
+}
+
+.dark .news-section h3 {
+	color: #f3f4f6 !important;
+}
+
+.news-section a.group {
+	background-color: transparent !important;
+}
+
+.dark .news-section a.group {
+	background-color: transparent !important;
+}

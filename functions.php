@@ -504,3 +504,65 @@ function belsks_register_projects_acf_fields() {
 }
 add_action( 'acf/init', 'belsks_register_projects_acf_fields' );
 
+/**
+ * Add "Duplicate" link to post list actions
+ */
+function belsks_add_duplicate_action( $actions, $post ) {
+	if ( $post->post_type === 'post' ) {
+		$actions['duplicate'] = '<a href="' . esc_url( wp_nonce_url( admin_url( 'admin.php?action=duplicate_post&amp;post=' . $post->ID ), 'duplicate_post_' . $post->ID ) ) . '" title="' . esc_attr__( 'Дублировать', 'belsks' ) . '" rel="nofollow">' . esc_html__( 'Дублировать', 'belsks' ) . '</a>';
+	}
+	return $actions;
+}
+add_filter( 'page_row_actions', 'belsks_add_duplicate_action', 10, 2 );
+add_filter( 'post_row_actions', 'belsks_add_duplicate_action', 10, 2 );
+
+/**
+ * Handle post duplication
+ */
+function belsks_handle_post_duplicate() {
+	if ( ! isset( $_GET['post'], $_GET['action'], $_GET['_wpnonce'] ) ) {
+		return;
+	}
+	
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'duplicate_post_' . $_GET['post'] ) ) {
+		return;
+	}
+	
+	if ( $_GET['action'] !== 'duplicate_post' ) {
+		return;
+	}
+	
+	$post_id = intval( $_GET['post'] );
+	$post = get_post( $post_id );
+	
+	if ( ! $post || $post->post_type !== 'post' ) {
+		return;
+	}
+	
+	if ( ! current_user_can( 'publish_posts' ) ) {
+		return;
+	}
+	
+	$new_post = array(
+		'post_title'   => $post->post_title . ' (копия)',
+		'post_content' => $post->post_content,
+		'post_excerpt' => $post->post_excerpt,
+		'post_status'  => 'draft',
+		'post_type'    => 'post',
+		'post_author'  => get_current_user_id(),
+	);
+	
+	$new_post_id = wp_insert_post( $new_post );
+	
+	if ( $new_post_id && ! is_wp_error( $new_post_id ) ) {
+		$thumbnail_id = get_post_thumbnail_id( $post_id );
+		if ( $thumbnail_id ) {
+			set_post_thumbnail( $new_post_id, $thumbnail_id );
+		}
+		
+		wp_redirect( admin_url( 'post.php?post=' . $new_post_id . '&action=edit' ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'belsks_handle_post_duplicate' );
+

@@ -647,6 +647,118 @@ body.menu-open {
 	color: #f3f4f6 !important;
 }
 
+/* Dark mode for "Contact Form" section */
+.dark .contact-form-section {
+	background-color: #111827 !important;
+	background-image: none !important;
+}
+
+.contact-form-section h2 {
+	color: #222222 !important;
+}
+
+.dark .contact-form-section h2 {
+	color: #f3f4f6 !important;
+}
+
+.contact-form-section p {
+	color: #6b7280 !important;
+}
+
+.dark .contact-form-section p {
+	color: #9ca3af !important;
+}
+
+.contact-form-section .text-gray-700 {
+	color: #374151 !important;
+}
+
+.dark .contact-form-section .text-gray-700 {
+	color: #d1d5db !important;
+}
+
+.contact-form-section .bg-white {
+	background-color: #ffffff !important;
+}
+
+.dark .contact-form-section .bg-white {
+	background-color: #1f2937 !important;
+}
+
+.contact-form-section input,
+.contact-form-section textarea {
+	background-color: #ffffff !important;
+	color: #374151 !important;
+	border-color: #d1d5db !important;
+}
+
+.dark .contact-form-section input,
+.dark .contact-form-section textarea {
+	background-color: #374151 !important;
+	color: #f3f4f6 !important;
+	border-color: #4b5563 !important;
+}
+
+.contact-form-section input::placeholder,
+.contact-form-section textarea::placeholder {
+	color: #9ca3af !important;
+}
+
+.dark .contact-form-section input::placeholder,
+.dark .contact-form-section textarea::placeholder {
+	color: #6b7280 !important;
+}
+
+.contact-form-section label input[type="radio"],
+.contact-form-section label input[type="checkbox"] {
+	color: #294F78 !important;
+}
+
+.dark .contact-form-section label input[type="radio"],
+.dark .contact-form-section label input[type="checkbox"] {
+	color: #60a5fa !important;
+}
+
+.contact-form-section .bg-purple-600 {
+	background-color: #9333ea !important;
+}
+
+.dark .contact-form-section .bg-purple-600 {
+	background-color: #a855f7 !important;
+}
+
+.contact-form-section .bg-blue-500 {
+	background-color: #3b82f6 !important;
+}
+
+.dark .contact-form-section .bg-blue-500 {
+	background-color: #60a5fa !important;
+}
+
+.contact-form-section .bg-green-500 {
+	background-color: #22c55e !important;
+}
+
+.dark .contact-form-section .bg-green-500 {
+	background-color: #4ade80 !important;
+}
+
+.contact-form-section .bg-blue-900 {
+	background-color: #1e3a8a !important;
+}
+
+.dark .contact-form-section .bg-blue-900 {
+	background-color: #3b82f6 !important;
+}
+
+.contact-form-section .bg-blue-900:hover {
+	background-color: #1e40af !important;
+}
+
+.dark .contact-form-section .bg-blue-900:hover {
+	background-color: #2563eb !important;
+}
+
 .news-section a.group {
 	background-color: transparent !important;
 }

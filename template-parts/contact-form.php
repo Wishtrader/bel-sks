@@ -1,26 +1,19 @@
 
-    <section class="relative bg-gradient-to-br from-gray-50 to-white overflow-hidden">
-        <!-- Decorative background shapes -->
-        <div class="absolute top-0 right-0 w-1/2 h-full pointer-events-none">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-gray-100 transform rotate-45 opacity-60"></div>
-        </div>
-        <div class="absolute bottom-0 right-20 w-3/4 h-40 bg-gray-100 transform -skew-x-12 opacity-70"></div>
-        <div class="absolute top-20 left-0 w-48 h-48 bg-white border border-gray-200 opacity-50"></div>
-
-        <div class="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-                <!-- Left column: text -->
-                <div class="max-w-lg">
+    <section class="relative overflow-hidden bg-[url('<?php the_field('contact-bg')?>')] bg-cover bg-center bg-no-repeat contact-form-section">
+        <div class="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 sm:py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 items-center">
+                <!-- Left column: text (1/3) -->
+                <div class="max-w-lg lg:col-span-1 md:min-w-[400px]">
                     <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
-                        Обсудим вашу задачу?
+                        <?php the_field('contact-form-heading') ?>
                     </h2>
-                    <p class="text-gray-700 text-base leading-relaxed">
-                        Свяжитесь с нами, чтобы получить консультацию, подобрать решение и запросить коммерческое предложение.
+                    <p class="text-[#3D3D3D] text-lg leading-[1.2]">
+                        <?php the_field('contact-form-description') ?>
                     </p>
                 </div>
 
-                <!-- Right column: form -->
-                <form class="bg-white shadow-lg rounded-sm border border-gray-100 p-6 sm:p-8" onsubmit="event.preventDefault(); alert('Спасибо!");">
+                <!-- Right column: form (2/3) -->
+                <form class="bg-white md:min-w-[700px] shadow-lg rounded-sm border border-gray-100 p-6 sm:p-8 lg:col-span-2" onsubmit="event.preventDefault(); alert('Спасибо!");">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                         <!-- Name -->
                         <div class="sm:col-span-1">
@@ -40,45 +33,45 @@
                     </div>
 
                     <!-- Contact method -->
-                    <div class="mb-6">
-                        <p class="text-sm font-medium text-gray-700 mb-3">Предпочтительный способ связи:</p>
+                    <div class="mb-6 flex items-center">
+                        <p class="text-sm font-semibold text-[#294F78] mr-2">Предпочтительный способ связи:</p>
                         <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact" class="w-4 h-4 text-blue-600" checked>
+                                <input type="radio" name="contact_method" value="phone" class="w-4 h-4 text-blue-600 contact-method-radio" checked>
                                 <span class="ml-2 text-gray-700">Телефон</span>
                             </label>
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact" class="w-4 h-4">
-                                <span class="ml-2 inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-600 text-white text-sm font-bold">V</span>
+                                <input type="radio" name="contact_method" value="viber" class="w-4 h-4 text-blue-600 contact-method-radio mr-2">
+                                <img src="<?php the_field('icon1') ?>" alt="icon1" class="w-[28px] h-[28px]">
                             </label>
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact" class="w-4 h-4">
-                                <span class="ml-2 inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white text-sm font-bold">T</span>
+                                <input type="radio" name="contact_method" value="telegram" class="w-4 h-4 text-blue-600 contact-method-radio mr-2">
+                                <img src="<?php the_field('icon2') ?>" alt="icon2" class="w-[28px] h-[28px]">
                             </label>
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact" class="w-4 h-4">
-                                <span class="ml-2 inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white text-sm font-bold">W</span>
+                                <input type="radio" name="contact_method" value="whatsapp" class="w-4 h-4 text-blue-600 contact-method-radio mr-2">
+                                <img src="<?php the_field('icon3') ?>" alt="icon3" class="w-[28px] h-[28px]">
                             </label>
                         </div>
                     </div>
 
                     <!-- Comment -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Комментарий</label>
-                        <textarea rows="3" placeholder="Опишите вашу задачу" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-700 resize-none"></textarea>
+											<label class="text-sm font-semibold text-[#294F78]">Комментарий</label>
+											<textarea rows="1" placeholder="Опишите вашу задачу" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"></textarea>
                     </div>
 
                     <!-- Checkbox + Button -->
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="flex flex-col items-center sm:flex-row sm:items-center gap-4">
                         <label class="flex items-start cursor-pointer">
-                            <input type="checkbox" checked class="w-4 h-4 mt-1 text-blue-600 rounded">
+                            <input type="checkbox" checked class="w-[20px] h-[20px] text-[#294F78] rounded" style="accent-color: #294F78;">
                             <span class="ml-2 text-sm text-gray-700">
                                 Соглашаюсь с <a href="#" class="underline hover:text-blue-600">политикой обработки персональных данных</a>
                             </span>
                         </label>
                     </div>
 
-                    <button type="submit" class="mt-4 sm:mt-6 inline-flex items-center justify-center px-8 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded shadow-md transition-colors">
+                    <button type="submit" class="mt-4 sm:mt-6 inline-flex items-center justify-center px-8 py-3 bg-[#294F78] hover:bg-blue-800 text-white font-medium rounded shadow-md transition-colors">
                         Отправить заявку
                     </button>
                 </form>

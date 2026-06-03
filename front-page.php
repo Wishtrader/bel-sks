@@ -56,12 +56,16 @@ get_header();
 
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 				<?php
-				$categories = get_terms(
+				$uncategorized_id = (int) get_option( 'default_product_cat' );
+				$categories       = get_terms(
 					array(
 						'taxonomy'   => 'product_cat',
 						'hide_empty' => false,
+						'parent'     => 0,
+						'exclude'    => $uncategorized_id ? array( $uncategorized_id ) : array(),
 						'number'     => 4,
-						'exclude'    => array( 1 ),
+						'orderby'    => 'name',
+						'order'      => 'ASC',
 					)
 				);
 

@@ -121,21 +121,31 @@
 						</div>
 					</div>
 
-					<!-- Bottom row: Navigation -->
-					<nav id="site-navigation" class="main-navigation">
+				<!-- Bottom row: Navigation -->
+				<nav id="site-navigation" class="main-navigation flex items-center justify-between gap-8 py-3">
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'menu-1',
+							'menu_id'        => 'primary-menu',
+							'menu_class'     => 'flex items-center gap-8',
+							'link_class'     => 'text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors',
+							'container'      => false,
+							'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+						)
+					);
+					?>
+					<?php if ( class_exists( 'WooCommerce' ) ) : ?>
 						<?php
-						wp_nav_menu(
-							array(
-								'theme_location' => 'menu-1',
-								'menu_id'        => 'primary-menu',
-								'menu_class'     => 'flex items-center gap-8 py-3',
-								'link_class'     => 'text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors',
-								'container'      => false,
-								'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-							)
-						);
+						$cart_url   = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
+						$cart_count = ( function_exists( 'WC' ) && WC()->cart ) ? (int) WC()->cart->get_cart_contents_count() : 0;
 						?>
-					</nav>
+						<a href="<?php echo esc_url( $cart_url ); ?>" class="relative ml-auto inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="<?php esc_attr_e( 'Корзина', 'belsks' ); ?>" data-cart-link>
+							<i data-lucide="shopping-cart" class="w-6 h-6"></i>
+							<span data-cart-count class="<?php echo $cart_count > 0 ? '' : 'hidden'; ?> absolute -top-2 -right-3 min-w-[20px] h-[20px] px-1 inline-flex items-center justify-center rounded-full bg-blue-600 text-white text-[11px] font-bold leading-none"><?php echo esc_html( $cart_count ); ?></span>
+						</a>
+					<?php endif; ?>
+				</nav>
 				</div>
 
 				<!-- Mobile: Search & Burger -->

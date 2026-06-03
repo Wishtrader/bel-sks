@@ -600,6 +600,194 @@ function belsks_enqueue_contact_form_script() {
 		wp_get_theme()->get( 'Version' ),
 		true
 	);
+
+	if ( class_exists( 'WooCommerce' ) ) {
+		wp_enqueue_script(
+			'belsks-cart-fragments',
+			get_template_directory_uri() . '/js/cart-fragments.js',
+			array( 'jquery' ),
+			wp_get_theme()->get( 'Version' ),
+			true
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'belsks_enqueue_contact_form_script' );
+
+/**
+ * Register cart count fragment so WC refreshes the badge on AJAX add-to-cart
+ */
+function belsks_cart_count_fragments( $fragments ) {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return $fragments;
+	}
+	$count = ( WC()->cart ) ? (int) WC()->cart->get_cart_contents_count() : 0;
+	$cls   = $count > 0 ? '' : 'hidden';
+	$fragments['belsks_cart_count'] = sprintf(
+		'<span data-cart-count class="%s absolute -top-2 -right-3 min-w-[20px] h-[20px] px-1 inline-flex items-center justify-center rounded-full bg-blue-600 text-white text-[11px] font-bold leading-none">%d</span>',
+		esc_attr( $cls ),
+		$count
+	);
+	return $fragments;
+}
+add_filter( 'woocommerce_add_to_cart_fragments', 'belsks_cart_count_fragments' );
+
+/**
+ * Suppress the default page title on the cart/checkout pages so it
+ * doesn't duplicate the H1 rendered by our custom templates.
+ */
+function belsks_suppress_page_title( $title, $id = null ) {
+	if ( ! is_admin() && in_the_loop() ) {
+		$cart_page_id    = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'cart' ) : 0;
+		$checkout_page_id = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'checkout' ) : 0;
+		$thank_you_page   = get_page_by_path( 'zakaz-oformlen' );
+		$thank_you_id     = $thank_you_page ? (int) $thank_you_page->ID : 0;
+		$ids              = array_filter( array_map( 'absint', array( $cart_page_id, $checkout_page_id, $thank_you_id ) ) );
+		if ( $id && in_array( (int) $id, $ids, true ) ) {
+			return '';
+		}
+	}
+	return $title;
+}
+add_filter( 'the_title', 'belsks_suppress_page_title', 10, 2 );
+
+/**
+ * [belsks_order_thank_you] — render the custom order confirmation page.
+ */
+function belsks_order_thank_you_shortcode() {
+	ob_start();
+	$phone_icon = get_template_directory() . '/img/phone-icon.svg';
+	set_query_var( 'belsks_thank_you_phone_icon_exists', file_exists( $phone_icon ) );
+	include get_template_directory() . '/template-parts/order-thank-you.php';
+	return ob_get_clean();
+}
+add_shortcode( 'belsks_order_thank_you', 'belsks_order_thank_you_shortcode' );
+
+/**
+ * AJAX: create a WC order from the custom cart checkout form.
+ *
+ * Receives serialized form data, walks both possible forms (legal / individual),
+ * creates an order with the current cart items, attaches billing/shipping data,
+ * empties the cart, and returns the redirect URL to the thank-you page.
+ */
+function belsks_create_order_ajax() {
+	check_ajax_referer( 'belsks_create_order', 'nonce' );
+
+	if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart || WC()->cart->is_empty() ) {
+		wp_send_json_error( array( 'message' => 'Корзина пуста.' ), 400 );
+	}
+
+	$is_individual = ! empty( $_POST['customer_type'] ) && 'individual' === $_POST['customer_type'];
+
+	$name     = sanitize_text_field( $is_individual ? ( $_POST['billing_full_name_i'] ?? '' ) : ( $_POST['billing_first_name'] ?? '' ) );
+	$phone    = sanitize_text_field( $is_individual ? ( $_POST['billing_phone_i'] ?? '' ) : ( $_POST['billing_phone'] ?? '' ) );
+	$email    = sanitize_email( $is_individual ? ( $_POST['billing_email_i'] ?? '' ) : ( $_POST['billing_email'] ?? '' ) );
+	$company  = $is_individual ? '' : sanitize_text_field( $_POST['billing_company'] ?? '' );
+	$company_id = $is_individual ? '' : sanitize_text_field( $_POST['billing_company_id'] ?? '' );
+	$address  = sanitize_text_field( $is_individual ? ( $_POST['shipping_address_i'] ?? '' ) : ( $_POST['shipping_address'] ?? '' ) );
+	$shipping_method = sanitize_text_field( $is_individual ? ( $_POST['shipping_method_i'] ?? '' ) : ( $_POST['shipping_method'] ?? '' ) );
+	$payment_method  = sanitize_text_field( $is_individual ? ( $_POST['payment_method_i'] ?? '' ) : ( $_POST['payment_method'] ?? '' ) );
+	$comments        = sanitize_textarea_field( $is_individual ? ( $_POST['order_comments_i'] ?? '' ) : ( $_POST['order_comments'] ?? '' ) );
+
+	if ( '' === $name || '' === $phone || '' === $email ) {
+		wp_send_json_error( array( 'message' => 'Заполните обязательные поля (имя, телефон, e-mail).' ), 400 );
+	}
+
+	$order = wc_create_order();
+	if ( is_wp_error( $order ) ) {
+		wp_send_json_error( array( 'message' => 'Не удалось создать заказ.' ), 500 );
+	}
+
+	if ( 'shop_order_placehold' === $order->get_type() ) {
+		wp_update_post( array(
+			'ID'        => $order->get_id(),
+			'post_type' => 'shop_order',
+		) );
+		wp_cache_delete( $order->get_id(), 'posts' );
+		$order = wc_get_order( $order->get_id() );
+	}
+
+	foreach ( WC()->cart->get_cart() as $cart_key => $item ) {
+		$product = apply_filters( 'woocommerce_cart_item_product', $item['data'], $item, $cart_key );
+		if ( ! $product ) {
+			continue;
+		}
+		$order->add_product( $product, (int) $item['quantity'] );
+	}
+
+	$billing = array(
+		'first_name' => $name,
+		'last_name'  => '',
+		'company'    => $company,
+		'email'      => $email,
+		'phone'      => $phone,
+		'address_1'  => $address,
+		'address_2'  => $company_id,
+		'city'       => '',
+		'postcode'   => '',
+		'country'    => '',
+		'state'      => '',
+	);
+
+	$order->set_address( $billing, 'billing' );
+	$order->set_address( $billing, 'shipping' );
+
+	$payment_titles = array(
+		'invoice'         => 'Оплата по счёту',
+		'manager'         => 'Уточнить с менеджером',
+		'internet_banking' => 'Оплата через интернет-банкинг',
+	);
+	if ( isset( $payment_titles[ $payment_method ] ) ) {
+		$order->set_payment_method( $payment_method );
+		update_post_meta( $order->get_id(), '_payment_method_title', $payment_titles[ $payment_method ] );
+	}
+
+	if ( 'pickup' === $shipping_method ) {
+		$order->set_shipping_total( 0 );
+		update_post_meta( $order->get_id(), '_shipping_method_title', 'Самовывоз' );
+	} else {
+		update_post_meta( $order->get_id(), '_shipping_method_title', 'Доставка' );
+	}
+
+	if ( $comments ) {
+		$order->set_customer_note( $comments );
+	}
+
+	$order->calculate_totals();
+	$order->set_status( 'pending', 'Заказ создан с сайта' );
+	$order->save();
+
+	$note_lines = array();
+	if ( $company )    { $note_lines[] = 'Компания: ' . $company; }
+	if ( $company_id ) { $note_lines[] = 'УНП: ' . $company_id; }
+	if ( $is_individual ) { $note_lines[] = 'Тип клиента: физическое лицо'; } else { $note_lines[] = 'Тип клиента: юридическое лицо'; }
+	if ( $note_lines ) {
+		$order->add_order_note( implode( "\n", $note_lines ), false, true );
+	}
+
+	WC()->cart->empty_cart();
+
+	$redirect = add_query_arg( 'order', $order->get_id(), home_url( '/zakaz-oformlen/' ) );
+
+	wp_send_json_success( array(
+		'redirect' => $redirect,
+		'order_id' => $order->get_id(),
+	) );
+}
+add_action( 'wp_ajax_belsks_create_order', 'belsks_create_order_ajax' );
+add_action( 'wp_ajax_nopriv_belsks_create_order', 'belsks_create_order_ajax' );
+
+/**
+ * Pass the AJAX URL/nonce to the front-end scripts.
+ */
+function belsks_localize_cart_ajax() {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return;
+	}
+	wp_localize_script( 'belsks-cart-fragments', 'belsksCart', array(
+		'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+		'createNonce' => wp_create_nonce( 'belsks_create_order' ),
+		'checkoutUrl' => wc_get_checkout_url(),
+	) );
+}
+add_action( 'wp_enqueue_scripts', 'belsks_localize_cart_ajax', 20 );
 

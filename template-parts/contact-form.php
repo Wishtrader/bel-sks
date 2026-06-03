@@ -1,5 +1,5 @@
 
-    <section class="relative overflow-hidden bg-[url('<?php the_field('contact-bg')?>')] bg-cover bg-center bg-no-repeat contact-form-section">
+    <section id="contact-form" class="relative overflow-hidden bg-[url('<?php the_field('contact-bg')?>')] bg-cover bg-center bg-no-repeat contact-form-section">
         <div class="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 sm:py-20">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 items-center">
                 <!-- Left column: text (1/3) -->

@@ -118,22 +118,22 @@ get_header();
 				if ( $services_query->have_posts() ) {
 					while ( $services_query->have_posts() ) {
 						$services_query->the_post();
-						$icon_url = get_field( 'service_icon' );
-						$icon_src = is_array( $icon_url ) ? $icon_url['url'] : '';
+						$service_id     = get_the_ID();
+						$service_permalink = get_permalink();
+						$service_desc   = get_post_meta( $service_id, 'service_description', true );
+						if ( ! $service_desc ) {
+							$service_desc = wp_strip_all_tags( get_the_excerpt() );
+						}
 						?>
 						<div class="bg-white dark:bg-gray-800 relative min-h-[226px] p-[20px] shadow-sm hover:shadow-md transition-shadow">
 						<div class="flex items-center">
 							<div class="w-12 h-12 flex items-center justify-center mb-4 text-[#1e3a5f] dark:text-gray-100 mr-[10px]">
-								<?php if ( $icon_src ) : ?>
-									<img src="<?php echo esc_url( $icon_src ); ?>" alt="<?php the_title_attribute(); ?>" class="min-w-[58px] h-[44px]">
-								<?php else : ?>
-									<i data-lucide="lightbulb" class="w-6 h-6"></i>
-								<?php endif; ?>
+								<i data-lucide="lightbulb" class="w-6 h-6"></i>
 							</div>
 							<h3 class="text-lg font-bold text-[#222222] leading-[1.2] dark:text-gray-100 mb-2"><?php the_title(); ?></h3>
 							</div>
-							<p class="text-base font-normal leading-[1.2] text-gray-600 dark:text-gray-300 mb-4"><?php echo esc_html( wp_strip_all_tags( get_field( 'service_description' ) ?: get_the_excerpt() ) ); ?></p>
-							<a href="<?php echo esc_url( $category_link ); ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
+							<p class="text-base font-normal leading-[1.2] text-gray-600 dark:text-gray-300 mb-4"><?php echo esc_html( $service_desc ); ?></p>
+							<a href="<?php echo esc_url( $service_permalink ); ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
 							Подробнее
 							</a>
 

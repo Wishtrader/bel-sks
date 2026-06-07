@@ -28,11 +28,11 @@ get_header();
 					<?php the_field('hero_desc') ?>
 				</p>
 				<div class="flex flex-wrap gap-4">
-					<a href="#" class="inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#162d4a] transition-colors">
+					<a href="#contact-form" class="inline-flex items-center gap-2 bg-[#294F78] text-white px-8 py-3 rounded-[4px] font-normal hover:bg-[#162d4a] transition-colors">
 						Получить консультацию
 						<i data-lucide="arrow-right" class="w-4 h-4"></i>
 					</a>
-					<a href="#" class="inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#1e3a5f] px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+					<a href="/каталог" class="inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-[4px] font-normal hover:bg-gray-50 transition-colors">
 						В каталог
 					</a>
 				</div>
@@ -124,11 +124,26 @@ get_header();
 						if ( ! $service_desc ) {
 							$service_desc = wp_strip_all_tags( get_the_excerpt() );
 						}
+						$service_icon = function_exists( 'get_field' ) ? get_field( 'service_icon' ) : '';
+						$icon_url     = '';
+						$icon_alt     = get_the_title();
+						if ( is_array( $service_icon ) ) {
+							$icon_url = isset( $service_icon['url'] ) ? $service_icon['url'] : '';
+							if ( ! empty( $service_icon['alt'] ) ) {
+								$icon_alt = $service_icon['alt'];
+							}
+						} elseif ( is_string( $service_icon ) ) {
+							$icon_url = $service_icon;
+						}
 						?>
 						<div class="bg-white dark:bg-gray-800 relative min-h-[226px] p-[20px] shadow-sm hover:shadow-md transition-shadow">
 						<div class="flex items-center">
 							<div class="w-12 h-12 flex items-center justify-center mb-4 text-[#1e3a5f] dark:text-gray-100 mr-[10px]">
-								<i data-lucide="lightbulb" class="w-6 h-6"></i>
+								<?php if ( $icon_url ) : ?>
+									<img src="<?php echo esc_url( $icon_url ); ?>" alt="<?php echo esc_attr( $icon_alt ); ?>" class="w-full h-full object-contain">
+								<?php else : ?>
+									<i data-lucide="lightbulb" class="w-6 h-6"></i>
+								<?php endif; ?>
 							</div>
 							<h3 class="text-lg font-bold text-[#222222] leading-[1.2] dark:text-gray-100 mb-2"><?php the_title(); ?></h3>
 							</div>
@@ -328,13 +343,12 @@ get_header();
 	<!-- News Section -->
 	<section class="py-16 lg:py-24 bg-white dark:bg-gray-900 news-section bg-[url('<?php the_field('sec6_bg') ?>')] bg-cover bg-center bg-no-repeat">
 		<div class="max-w-[1200px] mx-auto px-4">
-			<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-4">
-				<h2 class="text-3xl font-bold text-[#222222] dark:text-gray-100"><?php the_field('sec6_heading') ?></h2>
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>" class="text-[#1e3a5f] dark:text-gray-100 font-medium hover:underline flex items-center gap-1">
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-4">
+		<h2 class="text-3xl font-bold text-[#222222] dark:text-gray-100"><?php the_field('sec6_heading') ?></h2>
+		<a href="/новости" class="basic-directions-btn inline-flex items-center gap-2 bg-white text-[#1e3a5f] border border-[#D0D6E8] px-8 py-3 rounded-sm font-medium hover:bg-gray-50 transition-colors">
 					К другим новостям
-					<i data-lucide="arrow-right" class="w-4 h-4"></i>
 				</a>
-			</div>
+	</div>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 				<?php
@@ -349,7 +363,7 @@ get_header();
 					while ( $news_query->have_posts() ) {
 						$news_query->the_post();
 						?>
-						<a href="<?php the_permalink(); ?>" class="group cursor-pointer block bg-white">
+						<a href="<?php the_permalink(); ?>" class="group cursor-pointer block !bg-white shadow">
 							<div class="overflow-hidden mb-4 h-48 bg-white ">
 								<?php if ( has_post_thumbnail() ) : ?>
 									<?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300' ) ); ?>
@@ -359,8 +373,11 @@ get_header();
 									</div>
 								<?php endif; ?>
 							</div>
-							<p class="text-xs text-gray-500 dark:text-gray-400 mb-2"><?php echo esc_html( get_the_date( 'd F Y' ) ); ?></p>
-							<h3 class="text-base font-bold text-[#222222] dark:text-gray-100 group-hover:text-[#1e3a5f] dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+							<div class="flex items-center p-4">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" aria-hidden="true" class="lucide lucide-calendar h-4 w-4"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
+							<p class="text-xs ml-1 text-gray-500 dark:text-gray-400"><?php echo esc_html( get_the_date( 'd F Y' ) ); ?></p>
+								</div>
+							<h3 class="text-base font-bold text-[#222222] dark:text-gray-100 group-hover:text-[#1e3a5f] dark:group-hover:text-blue-400 transition-colors line-clamp-2 px-4 pb-4">
 								<?php the_title(); ?>
 							</h3>
 						</a>

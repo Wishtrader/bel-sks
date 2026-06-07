@@ -28,7 +28,7 @@ get_header();
       <h2 class="text-4xl font-bold text-gray-900 mb-5">Услуги</h2>
 
       <!-- Description -->
-      <p class="text-gray-600 leading-relaxed mb-10 max-w-[600px]">
+      <p class="text-gray-600 leading-relaxed mb-10 max-w-[650px]">
         Комплексная поддержка проектов в складской логистике: от анализа задач и проектирования до монтажа, запуска и сервисного сопровождения.
       </p>
 

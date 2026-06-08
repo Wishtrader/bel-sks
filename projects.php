@@ -19,12 +19,12 @@ get_header();
       <div class="absolute right-0 top-[18%] h-px w-[55%] bg-slate-200/40"></div>
     </div>
 
-    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0 md:mt-6">
-      <nav class="mb-6 text-[15px] leading-none text-slate-500 sm:mb-8">
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="transition-colors hover:text-slate-700">Главная</a>
-        <span class="mx-2 text-slate-400">/</span>
-        <span class="text-slate-600">Проекты</span>
-      </nav>
+    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
+    <nav class="mb-8 text-[15px] leading-none text-slate-500 sm:mb-10 md:mt-12">
+      <a href="#" class="transition-colors hover:text-slate-700">Главная</a>
+      <span class="mx-2 text-slate-400">/</span>
+      <span class="text-slate-600">Проекты</span>
+    </nav>
 
       <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>

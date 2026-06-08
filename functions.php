@@ -585,6 +585,102 @@ function belsks_handle_post_duplicate() {
 add_action( 'admin_init', 'belsks_handle_post_duplicate' );
 
 /**
+ * Register ACF Fields for Partners (Secure Custom Fields)
+ */
+function belsks_register_partners_acf_fields() {
+    if ( function_exists( 'acf_add_local_field_group' ) ) {
+        acf_add_local_field_group( array(
+            'key'      => 'group_partners_fields',
+            'title'    => 'Логотипы партнёров',
+            'fields'   => array(
+                array(
+                    'key'               => 'field_partners_list',
+                    'label'             => 'Партнёры',
+                    'name'              => 'partners',
+                    'type'              => 'repeater',
+                    'instructions'      => 'Добавьте логотипы партнеров. Если их больше 6, появится слайдер.',
+                    'required'          => 0,
+                    'conditional_logic' => 0,
+                    'wrapper'           => array(
+                        'width' => '',
+                        'class' => '',
+                        'id'    => '',
+                    ),
+                    'collapsed'         => '',
+                    'min'               => 0,
+                    'max'               => 0,
+                    'layout'            => 'table',
+                    'button_label'      => 'Добавить партнёра',
+                    'sub_fields'        => array(
+                        array(
+                            'key'               => 'field_partner_logo',
+                            'label'             => 'Логотип',
+                            'name'              => 'logo',
+                            'type'              => 'image',
+                            'instructions'      => '',
+                            'required'          => 0,
+                            'conditional_logic' => 0,
+                            'wrapper'           => array(
+                                'width' => '',
+                                'class' => '',
+                                'id'    => '',
+                            ),
+                            'return_format'     => 'id',
+                            'preview_size'      => 'medium',
+                            'library'           => 'all',
+                            'min_width'         => '',
+                            'min_height'        => '',
+                            'min_size'          => '',
+                            'max_width'         => '',
+                            'max_height'        => '',
+                            'max_size'          => '',
+                            'mime_types'        => '',
+                        ),
+                        array(
+                            'key'               => 'field_partner_name',
+                            'label'             => 'Название',
+                            'name'              => 'name',
+                            'type'              => 'text',
+                            'instructions'      => '',
+                            'required'          => 0,
+                            'conditional_logic' => 0,
+                            'wrapper'           => array(
+                                'width' => '',
+                                'class' => '',
+                                'id'    => '',
+                            ),
+                            'default_value'     => '',
+                            'placeholder'       => '',
+                            'prepend'           => '',
+                            'append'            => '',
+                            'maxlength'         => '',
+                        ),
+                    ),
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param'    => 'page_template',
+                        'operator' => '==',
+                        'value'    => 'about.php',
+                    ),
+                ),
+            ),
+            'menu_order'            => 0,
+            'position'              => 'normal',
+            'style'                 => 'default',
+            'label_placement'       => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen'        => '',
+            'active'                => true,
+            'description'           => '',
+        ) );
+    }
+}
+add_action( 'acf/init', 'belsks_register_partners_acf_fields' );
+
+/**
  * Load contact form handler
  */
 require get_template_directory() . '/inc/contact-form-handler.php';

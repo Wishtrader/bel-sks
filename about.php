@@ -18,19 +18,18 @@ get_header();
     </div>
 
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-      <nav class="mb-6 text-[15px] leading-none text-slate-500 sm:mb-8">
-        <a href="#" class="transition-colors hover:text-slate-700">Главная</a>
-        <span class="mx-2 text-slate-400">/</span>
-        <span class="text-slate-600">О компании</span>
-      </nav>
+    <nav class="mb-8 text-[15px] leading-none text-slate-500 sm:mb-10 md:mt-12">
+      <a href="#" class="transition-colors hover:text-slate-700">Главная</a>
+      <span class="mx-2 text-slate-400">/</span>
+      <span class="text-slate-600">О Компании</span>
+    </nav>
 
       <h1 class="mb-4 text-[38px] font-extrabold leading-none tracking-[-0.03em] text-slate-900 sm:mb-5 sm:text-[56px]">
-        О компании
+        <?php the_field('about_heading') ?>
       </h1>
 
       <p class="max-w-[640px] text-[17px] leading-snug text-slate-600 sm:text-[18px]">
-        БеСкС логистик — поставщик решений для складской логистики, хранения,
-        перемещения и организации производственного пространства.
+        <?php the_field('about_description') ?>
       </p>
     </div>
   </section>
@@ -45,23 +44,22 @@ get_header();
 
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <div class="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-center">
-        <div class="overflow-hidden rounded-sm bg-[linear-gradient(135deg,#d9e0ea_0%,#9fb2c7_45%,#c7d0db_100%)] shadow-[0_16px_40px_rgba(15,23,42,0.25)] h-[260px] sm:h-[320px] lg:h-[360px]"></div>
+        <img src="<?php the_field('sec2_image') ?>" alt="" class="w-full h-full object-cover">
 
         <div>
           <h2 class="mb-5 text-[26px] font-extrabold leading-tight tracking-[-0.02em] text-slate-900 sm:text-[30px]">
-            Инженерная экспертиза<br class="hidden sm:block" />
-            в складской логистике
+            <?php the_field('sec2_heading') ?>
           </h2>
 
           <div class="space-y-3 text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
             <p>
-              БеСкС логистик — ведущий системный интегратор в области складского оборудования и промышленной автоматизации в Республике Беларусь.
+              <?php the_field('sec2_description1') ?>
             </p>
-            <p>
-              Мы специализируемся на проектировании, поставке, монтаже и сопровождении комплексных решений для складов, производственных и логистических центров.
+						<p>
+              <?php the_field('sec2_description2') ?>
             </p>
-            <p>
-              Наши инженеры и технические специалисты обладают многолетним опытом в реализации проектов любой сложности — от модернизации складской зоны до полностью автоматизированных логистических комплексов.
+						<p>
+              <?php the_field('sec2_description3') ?>
             </p>
           </div>
 
@@ -114,43 +112,110 @@ get_header();
     <div class="absolute right-0 top-[60%] h-[2px] w-[55%] bg-slate-200/40"></div>
   </div>
 
-  <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-    <!-- Внешний серый блок как в макете -->
-    <div class="rounded-sm bg-[#f1f4f9] px-4 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-9">
-      <!-- Заголовок + текст -->
+  <div class="relative mx-auto w-full max-w-[1200px] sm:px-6 lg:px-0">
+    <div class="py-6 sm:py-8 lg:py-9">
       <div class="mb-6 sm:mb-7 lg:mb-8">
         <h2 class="mb-3 text-[24px] font-extrabold leading-tight tracking-[-0.02em] text-slate-900 sm:text-[26px]">
-          Партнёры и производители
+          <?php the_field('sec3_heading') ?>
         </h2>
         <p class="max-w-[640px] text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
-          Мы сотрудничаем с ведущими производителями оборудования для
-          интегративных складских решений, включая Mecalux, Interroll, Kardex и завод «ДиКом».
+          <?php the_field('sec3_description') ?>
         </p>
       </div>
 
-      <!-- Внутренний белый блок с логотипами -->
-      <div class="rounded-sm border border-slate-200 bg-white px-4 py-4 shadow-[0_4px_16px_rgba(15,23,42,0.10)] sm:px-6 sm:py-5">
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
-            Logo
+      <div class="w-full">
+        <?php 
+        $partners = function_exists('get_field') ? get_field('partners') : null;
+        if ( !empty($partners) && is_array($partners) ) : ?>
+          <div id="partners-viewport" class="overflow-hidden">
+            <div id="partners-track" class="flex transition-transform duration-500 ease-in-out">
+              <?php foreach ($partners as $partner) : 
+                $logo_id = isset($partner['logo']) ? $partner['logo'] : null;
+                $logo_url = $logo_id ? wp_get_attachment_image_url($logo_id, 'medium') : '';
+                $partner_name = isset($partner['name']) ? $partner['name'] : '';
+              ?>
+                <div class="partners-item min-w-[50%] sm:min-w-[33.333%] lg:min-w-[16.666%] px-2">
+                  <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
+                    <?php if ( $logo_url ) : ?>
+                      <img src="<?php echo esc_url($logo_url); ?>" alt="<?php echo esc_attr($partner_name); ?>" class="object-contain">
+                    <?php else : ?>
+                      <span class="opacity-50"><?php echo esc_html($partner_name ?: 'Logo'); ?></span>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
           </div>
-          <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
-            Logo
+
+          <?php if ( count($partners) > 6 ) : ?>
+            <button id="partners-prev" class="absolute -left-3 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-10 border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity disabled:hidden">
+              <i data-lucide="chevron-left" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <button id="partners-next" class="absolute -right-3 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-10 border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity disabled:hidden">
+              <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const track = document.getElementById('partners-track');
+              const prev = document.getElementById('partners-prev');
+              const next = document.getElementById('partners-next');
+              if (!track || !prev || !next) return;
+
+              let index = 0;
+              const items = track.querySelectorAll('.partners-item');
+              const total = items.length;
+              
+              function getVisibleCount() {
+                if (window.innerWidth >= 1024) return 6;
+                if (window.innerWidth >= 640) return 3;
+                return 2;
+              }
+
+              function updateSlider() {
+                const visible = getVisibleCount();
+                const maxIndex = Math.max(0, total - visible);
+                if (index > maxIndex) index = maxIndex;
+                
+                const width = 100 / visible;
+                track.style.transform = `translateX(-${index * width}%)`;
+                
+                prev.disabled = index === 0;
+                next.disabled = index >= maxIndex;
+                
+                prev.style.display = index === 0 ? 'none' : 'block';
+                next.style.display = index >= maxIndex ? 'none' : 'block';
+              }
+
+              prev.addEventListener('click', () => {
+                if (index > 0) {
+                  index--;
+                  updateSlider();
+                }
+              });
+
+              next.addEventListener('click', () => {
+                if (index < total - getVisibleCount()) {
+                  index++;
+                  updateSlider();
+                }
+              });
+
+              window.addEventListener('resize', updateSlider);
+              updateSlider();
+            });
+            </script>
+          <?php endif; ?>
+        <?php else : ?>
+          <!-- Placeholder if no partners added -->
+          <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 opacity-30">
+            <?php for($i=0; $i<6; $i++): ?>
+              <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">Logo</div>
+            <?php endfor; ?>
           </div>
-          <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
-            Logo
-          </div>
-          <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
-            Logo
-          </div>
-          <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
-            Logo
-          </div>
-          <div class="flex h-14 items-center justify-center rounded bg-slate-50 text-[12px] font-semibold uppercase tracking-wide text-slate-400 sm:h-16">
-            Logo
-          </div>
-        </div>
+        <?php endif; ?>
       </div>
+    </div>
     </div>
   </div>
 </section>
@@ -166,17 +231,14 @@ get_header();
       <div class="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.1fr)] lg:items-start">
         <div>
           <h2 class="mb-4 text-[26px] font-extrabold leading-tight tracking-[-0.02em] text-slate-900 sm:text-[30px]">
-            Наша экспертиза
+            <?php the_field('sec4_heading') ?>
           </h2>
           <div class="space-y-3 text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
             <p>
-              Мы работаем на стыке инженерного подхода, складской логистики и производственной практики. Для нас важно не просто поставить оборудование, а создать решение, которое будет работать для вашего бизнеса.
+              <?php the_field('sec4_description1') ?>
             </p>
             <p>
-              Мы помогаем бизнесу организовать эффективные склады и производственные пространства, оптимизировать логистику, повысить скорость обработки заказов и сократить затраты.
-            </p>
-            <p>
-              В наши решения входят проектирование, поставка и монтаж оборудования, пусконаладка и сервисное сопровождение.
+              <?php the_field('sec4_description2') ?>
             </p>
           </div>
         </div>
@@ -231,65 +293,56 @@ get_header();
 
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <h2 class="mb-3 text-[26px] font-extrabold leading-tight tracking-[-0.02em] text-slate-900 sm:text-[30px]">
-        Когда проект можно считать успешным
+        <?php the_field('sec5_heading') ?>
       </h2>
-      <p class="mb-8 max-w-[560px] text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
-        Для нас проект успешен тогда, когда он помогает бизнесу работать эффективнее.
+      <p class="mb-8 max-w-[652px] text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
+        <?php the_field('sec5_description') ?>
       </p>
 
       <div class="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.14)]">
-        <div class="grid gap-px bg-slate-100 sm:grid-cols-3 lg:grid-cols-6">
+        <div class="grid gap-px bg-slate-100 sm:grid-cols-3 lg:grid-cols-5">
           <div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#e4edf7] text-[#3f5d7e]">
-              <span class="text-xl font-semibold">⇪</span>
-            </div>
-            <div class="text-[14px] font-semibold leading-snug text-slate-800">
-              Увеличение скорости обработки заказов
+              <img class="h-[68px] w-[68px]"
+              src="<?php the_field('icon1'); ?>"
+              alt="icon" />
+            <div class="text-base font-normal leading-[1.2] text-slate-800">
+              <?php the_field('title1') ?>
             </div>
           </div>
 
-          <div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#e4edf7] text-[#3f5d7e]">
-              <span class="text-xl font-semibold">%</span>
-            </div>
-            <div class="text-[14px] font-semibold leading-snug text-slate-800">
-              Повышение эффективности использования складского пространства
-            </div>
-          </div>
-
-          <div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#e4edf7] text-[#3f5d7e]">
-              <span class="text-xl font-semibold">✓</span>
-            </div>
-            <div class="text-[14px] font-semibold leading-snug text-slate-800">
-              Снижение количества ошибок и возвратов
+					<div class="flex flex-col items-center gap-3 bg-white px-3 py-6 text-center">
+              <img class="h-[68px] w-[68px]"
+              src="<?php the_field('icon2'); ?>"
+              alt="icon" />
+            <div class="text-base font-normal leading-[1.2] text-slate-800">
+              <?php the_field('title2') ?>
             </div>
           </div>
 
-          <div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#e4edf7] text-[#3f5d7e]">
-              <span class="text-xl font-semibold">⚙</span>
-            </div>
-            <div class="text-[14px] font-semibold leading-snug text-slate-800">
-              Снижение доли ручного труда
-            </div>
-          </div>
-
-          <div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#e4edf7] text-[#3f5d7e]">
-              <span class="text-xl font-semibold">☑</span>
-            </div>
-            <div class="text-[14px] font-semibold leading-snug text-slate-800">
-              Увеличение надёжности и прозрачности операций
+					<div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
+              <img class="h-[68px] w-[68px]"
+              src="<?php the_field('icon3'); ?>"
+              alt="icon" />
+            <div class="text-base font-normal leading-[1.2] text-slate-800">
+              <?php the_field('title3') ?>
             </div>
           </div>
 
-          <div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#e4edf7] text-[#3f5d7e]">
-              <span class="text-xl font-semibold">₽</span>
+					<div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
+              <img class="h-[68px] w-[68px]"
+              src="<?php the_field('icon4'); ?>"
+              alt="icon" />
+            <div class="text-base font-normal leading-[1.2] text-slate-800">
+              <?php the_field('title4') ?>
             </div>
-            <div class="text-[14px] font-semibold leading-snug text-slate-800">
-              Рост экономической эффективности склада
+          </div>
+
+					<div class="flex flex-col items-center gap-3 bg-white px-5 py-6 text-center">
+              <img class="h-[68px] w-[68px]"
+              src="<?php the_field('icon5'); ?>"
+              alt="icon" />
+            <div class="text-base font-normal leading-[1.2] text-slate-800">
+              <?php the_field('title5') ?>
             </div>
           </div>
         </div>
@@ -306,18 +359,15 @@ get_header();
 
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <div class="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center">
-        <div class="overflow-hidden rounded-sm bg-[linear-gradient(135deg,#d9e0ea_0%,#9fb2c7_45%,#c7d0db_100%)] shadow-[0_16px_40px_rgba(15,23,42,0.25)] h-[260px] sm:h-[320px] lg:h-[340px]"></div>
+        <img src="<?php the_field('sec6_img')?>" alt="img">
 
         <div>
           <h2 class="mb-4 text-[26px] font-extrabold leading-tight tracking-[-0.02em] text-slate-900 sm:text-[30px]">
-            Результат, который получает бизнес
+            <?php the_field('sec6_heading') ?>
           </h2>
           <div class="space-y-3 text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
             <p>
-              Итогом становится более организованная, надёжная и экономически эффективная работа склада или производства, ориентированная на рост объёмов и повышение прибыли.
-            </p>
-            <p>
-              Мы предлагаем решения, которые учитывают специфику отрасли, масштабы компании и долгосрочные планы развития.
+              <?php the_field('sec6_description') ?>
             </p>
           </div>
         </div>
@@ -325,88 +375,8 @@ get_header();
     </div>
   </section>
 
-  <!-- Contact / Discuss project -->
-  <section class="relative overflow-hidden bg-[#e0e5f0] py-10 sm:py-14 lg:py-16">
-    <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(248,250,252,0.35)_0%,rgba(148,163,184,0.35)_40%,rgba(15,23,42,0.55)_100%)] mix-blend-multiply"></div>
-
-    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-      <div class="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
-        <div class="text-white">
-          <h2 class="mb-4 text-[26px] font-extrabold leading-tight tracking-[-0.02em] sm:text-[30px]">
-            Обсудим вашу задачу?
-          </h2>
-          <p class="max-w-[440px] text-[15px] leading-relaxed sm:text-[16px]">
-            Свяжитесь с нами, чтобы получить консультацию, подобрать решение и запросить коммерческое предложение.
-          </p>
-        </div>
-
-        <form class="rounded-sm bg-white/95 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-6 lg:p-7">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div class="sm:col-span-1">
-              <label class="mb-1 block text-[13px] font-semibold uppercase tracking-wide text-slate-500">
-                Ваше имя *
-              </label>
-              <input type="text" class="block w-full rounded border border-slate-200 bg-slate-50 px-3 py-2.5 text-[14px] text-slate-900 outline-none transition focus:border-[#3f5d7e] focus:bg-white focus:ring-1 focus:ring-[#3f5d7e]" placeholder="Ваше имя" />
-            </div>
-
-            <div class="sm:col-span-1">
-              <label class="mb-1 block text-[13px] font-semibold uppercase tracking-wide text-slate-500">
-                Укажите телефон или e-mail *
-              </label>
-              <input type="text" class="block w-full rounded border border-slate-200 bg-slate-50 px-3 py-2.5 text-[14px] text-slate-900 outline-none transition focus:border-[#3f5d7e] focus:bg-white focus:ring-1 focus:ring-[#3f5d7e]" placeholder="+375 ..." />
-            </div>
-          </div>
-
-          <div class="mt-4">
-            <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
-              <span class="text-[13px] font-semibold uppercase tracking-wide text-slate-500">
-                Предпочтительный способ связи *
-              </span>
-              <div class="flex gap-2 text-[12px] text-slate-500">
-                <span>Телефон</span>
-                <span>•</span>
-                <span>Соцсети</span>
-              </div>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              <button type="button" class="rounded-full border border-[#3f5d7e] bg-[#3f5d7e] px-4 py-1.5 text-[13px] font-semibold text-white">
-                Телефон
-              </button>
-              <button type="button" class="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[13px] font-semibold text-slate-700">
-                Telegram
-              </button>
-              <button type="button" class="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[13px] font-semibold text-slate-700">
-                Viber
-              </button>
-              <button type="button" class="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[13px] font-semibold text-slate-700">
-                WhatsApp
-              </button>
-            </div>
-          </div>
-
-          <div class="mt-4">
-            <label class="mb-1 block text-[13px] font-semibold uppercase tracking-wide text-slate-500">
-              Комментарий
-            </label>
-            <textarea rows="3" class="block w-full rounded border border-slate-200 bg-slate-50 px-3 py-2.5 text-[14px] text-slate-900 outline-none transition focus:border-[#3f5d7e] focus:bg-white focus:ring-1 focus:ring-[#3f5d7e]" placeholder="Опишите вашу задачу"></textarea>
-          </div>
-
-          <label class="mt-4 flex items-start gap-2 text-[13px] text-slate-600">
-            <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-[#3f5d7e] focus:ring-[#3f5d7e]" />
-            <span>
-              Согласен с условиями
-              <a href="#" class="text-[#3f5d7e] underline underline-offset-2">обработки персональных данных</a>.
-            </span>
-          </label>
-
-          <button type="submit" class="mt-5 inline-flex w-full items-center justify-center rounded bg-[#3f5d7e] px-6 py-3 text-[15px] font-semibold tracking-wide text-white shadow-[0_10px_30px_rgba(15,23,42,0.35)] transition hover:bg-[#344d6a] sm:w-auto">
-            Отправить заявку
-          </button>
-        </form>
-      </div>
-    </div>
-  </section>
+  <!-- Contact form section -->
+<?php get_template_part( 'template-parts/contact-form', 'form' ); ?>
 </main>
 
 <?php

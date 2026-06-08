@@ -137,21 +137,20 @@ get_header();
 						}
 						?>
 						<div class="bg-white dark:bg-gray-800 relative min-h-[226px] p-[20px] shadow-sm hover:shadow-md transition-shadow">
-						<div class="flex items-center">
-							<div class="w-12 h-12 flex items-center justify-center mb-4 text-[#1e3a5f] dark:text-gray-100 mr-[10px]">
-								<?php if ( $icon_url ) : ?>
-									<img src="<?php echo esc_url( $icon_url ); ?>" alt="<?php echo esc_attr( $icon_alt ); ?>" class="w-full h-full object-contain">
-								<?php else : ?>
-									<i data-lucide="lightbulb" class="w-6 h-6"></i>
-								<?php endif; ?>
-							</div>
-							<h3 class="text-lg font-bold text-[#222222] leading-[1.2] dark:text-gray-100 mb-2"><?php the_title(); ?></h3>
+							<div class="flex items-center">
+								<div class="w-12 h-12 flex items-center justify-center mb-4 text-[#1e3a5f] dark:text-gray-100 mr-[10px]">
+									<?php if ( $icon_url ) : ?>
+										<img src="<?php echo esc_url( $icon_url ); ?>" alt="<?php echo esc_attr( $icon_alt ); ?>" class="w-full h-full object-contain">
+									<?php else : ?>
+										<i data-lucide="bell" class="w-6 h-6"></i>
+									<?php endif; ?>
+								</div>
+								<h3 class="text-lg font-bold text-[#222222] leading-[1.2] dark:text-gray-100 mb-2"><?php the_title(); ?></h3>
 							</div>
 							<p class="text-base font-normal leading-[1.2] text-gray-600 dark:text-gray-300 mb-4"><?php echo esc_html( $service_desc ); ?></p>
 							<a href="<?php echo esc_url( $service_permalink ); ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
-							Подробнее
+								Подробнее
 							</a>
-
 						</div>
 						<?php
 					}

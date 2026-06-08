@@ -28,7 +28,7 @@
 	}
 </script>
 <?php wp_body_open(); ?>
-<div id="page" class="site">
+<div id="page" class="site mt-10">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'belsks' ); ?></a>
 
 	<header id="masthead" class="site-header shadow-md fixed top-0 left-0 right-0 z-50">
@@ -88,7 +88,7 @@
 							</div>
 
 							<!-- Contact link -->
-							<a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+							<a href="/контакты" class="text-sm font-medium text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
 								Связаться с нами
 							</a>
 						</div>

@@ -111,12 +111,8 @@
 							</button>
 
 							<!-- Language switcher -->
-							<div class="flex items-center gap-1 text-sm">
-								<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">En</a>
-								<span class="text-gray-300 dark:text-gray-600">/</span>
-								<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">By</a>
-								<span class="text-gray-300 dark:text-gray-600">/</span>
-								<a href="#" class="font-semibold text-blue-600 dark:text-blue-400">Ru</a>
+							<div class="gtranslate_wrapper text-sm text-black">
+							
 							</div>
 						</div>
 					</div>
@@ -224,14 +220,14 @@
 							</div>
 						</button>
 
-						<!-- Language switcher -->
-						<div class="flex items-center gap-1 text-sm">
-							<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">En</a>
-							<span class="text-gray-300 dark:text-gray-600">/</span>
-							<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">By</a>
-							<span class="text-gray-300 dark:text-gray-600">/</span>
-							<a href="#" class="font-semibold text-blue-600 dark:text-blue-400">Ru</a>
-						</div>
+<!-- Language switcher -->
+							<div class="flex items-center gap-1 text-sm lang-switcher">
+								<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" data-gt-lang="en">En</a>
+								<span class="text-gray-300 dark:text-gray-600">/</span>
+								<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" data-gt-lang="be">By</a>
+								<span class="text-gray-300 dark:text-gray-600">/</span>
+								<a href="#" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" data-gt-lang="ru">Ru</a>
+							</div>
 					</div>
 				</div>
 			</div>

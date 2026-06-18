@@ -151,7 +151,7 @@ $catalog_url = $catalog_page ? get_permalink( $catalog_page ) : home_url( '/' );
 								<div class="grid gap-4 sm:grid-cols-2">
 									<div>
 										<label class="mb-2 block text-[14px] font-semibold text-[#1e3a5f]">Телефон <span class="text-red-500">*</span></label>
-										<input type="tel" name="billing_phone" placeholder="+375 (__) ___-__-__" required class="w-full border border-slate-200 bg-white px-4 py-3 text-[15px] focus:border-[#1e3a5f] focus:outline-none focus:ring-1 focus:ring-[#1e3a5f]">
+										<input type="tel" name="billing_phone" placeholder="+375 (XX) XXX-XX-XX" required class="w-full border border-slate-200 bg-white px-4 py-3 text-[15px] focus:border-[#1e3a5f] focus:outline-none focus:ring-1 focus:ring-[#1e3a5f]">
 									</div>
 									<div>
 										<label class="mb-2 block text-[14px] font-semibold text-[#1e3a5f]">E-mail <span class="text-red-500">*</span></label>
@@ -211,7 +211,7 @@ $catalog_url = $catalog_page ? get_permalink( $catalog_page ) : home_url( '/' );
 									</div>
 									<div>
 										<label class="mb-2 block text-[14px] font-semibold text-[#1e3a5f]">Телефон <span class="text-red-500">*</span></label>
-										<input type="tel" name="billing_phone_i" placeholder="+375 (__) ___-__-__" required class="w-full border border-slate-200 bg-white px-4 py-3 text-[15px] focus:border-[#1e3a5f] focus:outline-none focus:ring-1 focus:ring-[#1e3a5f]">
+										<input type="tel" name="billing_phone_i" placeholder="+375 (XX) XXX-XX-XX" required class="w-full border border-slate-200 bg-white px-4 py-3 text-[15px] focus:border-[#1e3a5f] focus:outline-none focus:ring-1 focus:ring-[#1e3a5f]">
 									</div>
 									<div>
 										<label class="mb-2 block text-[14px] font-semibold text-[#1e3a5f]">E-mail <span class="text-red-500">*</span></label>

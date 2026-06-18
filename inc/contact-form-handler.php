@@ -63,14 +63,26 @@ function is_valid_contact( $contact ) {
 		return true;
 	}
 	
-	// Check if phone
-	$phone_pattern = '/^[\d\s\+\-\(\)]{7,20}$/';
-	if ( preg_match( $phone_pattern, $contact ) ) {
-		$digits_only = preg_replace( '/\D/', '', $contact );
-		if ( strlen( $digits_only ) >= 7 ) {
-			return true;
-		}
+	// Check if Belarus phone (+375 XX XXX-XX-XX)
+	if ( prefix_is_valid_phone( $contact ) ) {
+		return true;
+	}
+	
+	// Check if international phone
+	$digits = preg_replace( '/[^\d]/', '', $contact );
+	if ( strlen( $digits ) >= 7 && strlen( $digits ) <= 15 ) {
+		return true;
 	}
 	
 	return false;
+}
+
+/**
+ * Validate Belarus phone number (+375 XX XXX-XX-XX)
+ */
+function prefix_is_valid_phone( $phone ) {
+	$phone  = trim( (string) $phone );
+	$digits = preg_replace( '/[^\d]/', '', $phone );
+
+	return strlen( $digits ) === 12 && strpos( $digits, '375' ) === 0;
 }

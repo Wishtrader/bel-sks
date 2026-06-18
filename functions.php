@@ -167,6 +167,9 @@ function belsks_scripts() {
 
 	wp_enqueue_script( 'belsks-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 
+	wp_enqueue_script( 'imask', 'https://unpkg.com/imask', array(), null, true );
+	wp_enqueue_script( 'belsks-phone-mask', get_template_directory_uri() . '/js/phone-mask.js', array( 'imask' ), _S_VERSION, true );
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
@@ -247,6 +250,110 @@ function belsks_theme_toggle_script() {
 	<?php
  }
  add_action( 'wp_head', 'belsks_theme_toggle_script', 30 );
+
+/**
+ * Add hidden GTranslate widget to ensure JS loads
+ */
+function belsks_gtranslate_loader() {
+	wp_enqueue_script( 'belsks-gtranslate-trigger', false, [], false, true );
+	wp_add_inline_script( 'belsks-gtranslate-trigger', "
+		window.gtranslateSettings = window.gtranslateSettings || {};
+		window.gtranslateSettings.temp = {
+			default_language: 'ru',
+			languages: ['en', 'be', 'ru'],
+			url_structure: 'none',
+			wrapper_selector: '.gtranslate_loader'
+		};
+	" );
+}
+add_action( 'wp_enqueue_scripts', 'belsks_gtranslate_loader', 100 );
+
+function belsks_gtranslate_loader_html() {
+	echo '<div class="gtranslate_loader" style="display:none;"></div>';
+}
+add_action( 'wp_footer', 'belsks_gtranslate_loader_html', 10 );
+
+/**
+ * Front-end language switcher JS
+ * - Highlights active language
+ * - On click triggers GTranslate's doGTranslate
+ */
+function belsks_language_switcher_script() {
+	$lang_map = array( 'en' => 'en', 'be' => 'be', 'ru' => 'ru' );
+	$default = 'ru';
+	?>
+	<script>
+	(function() {
+		var supported = ['en','be','ru'];
+		var defaultLang = '<?php echo $default; ?>';
+
+		function getLangFromCookie() {
+			try {
+				var m = document.cookie.match(/googtrans=\/[^\/]+\/([^;]+)/);
+				if (m) return m[1];
+			} catch(e) {}
+			try {
+				var m = document.cookie.match(/belsks_lang=(en|be|ru)/);
+				if (m) return m[1];
+			} catch(e) {}
+			return defaultLang;
+		}
+
+		function setLangCookie(lang) {
+			if (lang === defaultLang) {
+				document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+				document.cookie = 'belsks_lang=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+			} else {
+				document.cookie = 'googtrans=/'+defaultLang+'/'+lang+'; path=/';
+				document.cookie = 'belsks_lang='+lang+'; path=/; max-age=31536000';
+			}
+			try { localStorage.setItem('belsks_lang', lang); } catch(e) {}
+		}
+
+		function updateActiveLang() {
+			var lang = getLangFromCookie();
+			document.querySelectorAll('.lang-switcher a[data-gt-lang]').forEach(function(a) {
+				a.classList.remove('font-semibold','text-blue-600','dark:text-blue-400','text-gray-400','dark:text-gray-500');
+				if (a.getAttribute('data-gt-lang') === lang) {
+					a.classList.add('font-semibold','text-blue-600','dark:text-blue-400');
+				} else {
+					a.classList.add('text-gray-400','dark:text-gray-500');
+				}
+			});
+		}
+
+		function doTranslate(lang) {
+			if (typeof doGTranslate === 'function') {
+				doGTranslate(defaultLang + '|' + lang);
+			} else {
+				setLangCookie(lang);
+				var url = new URL(window.location.href);
+				url.searchParams.set('gl', lang);
+				window.location = url.toString();
+			}
+		}
+
+		document.querySelectorAll('.lang-switcher').forEach(function(sw) {
+			sw.addEventListener('click', function(e) {
+				var a = e.target.closest('a[data-gt-lang]');
+				if (!a) return;
+				var lang = a.getAttribute('data-gt-lang');
+				if (!lang || supported.indexOf(lang) === -1) return;
+				e.preventDefault();
+				doTranslate(lang);
+			});
+		});
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', updateActiveLang);
+		} else {
+			updateActiveLang();
+		}
+	})();
+	</script>
+	<?php
+}
+add_action( 'wp_footer', 'belsks_language_switcher_script', 20 );
 
 function belsks_nav_menu_css_class( $classes, $item, $args, $depth ) {
 	if ( in_array( 'current-menu-item', $classes ) || in_array( 'current_page_item', $classes ) ) {
@@ -886,4 +993,105 @@ function belsks_localize_cart_ajax() {
 	) );
 }
 add_action( 'wp_enqueue_scripts', 'belsks_localize_cart_ajax', 20 );
+
+/**
+ * Get the front page ID (works regardless of language plugins).
+ */
+function belsks_get_front_page_id() {
+	$front_page_id = (int) get_option( 'page_on_front' );
+	if ( ! $front_page_id ) {
+		$page = get_page_by_path( '/' );
+		if ( $page ) {
+			$front_page_id = $page->ID;
+		}
+	}
+	return $front_page_id;
+}
+
+/**
+ * Register ACF Fields for Contact Form section on the Front Page.
+ */
+function belsks_register_contact_form_acf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'      => 'group_contact_form_fields',
+			'title'    => 'Секция «Форма обратной связи»',
+			'fields'   => array(
+				array(
+					'key'          => 'field_cf_heading',
+					'label'        => 'Заголовок',
+					'name'         => 'cf_heading',
+					'type'         => 'text',
+					'instructions' => 'Заголовок секции формы обратной связи',
+					'default_value' => 'Обсудим вашу задачу?',
+				),
+				array(
+					'key'          => 'field_cf_desc',
+					'label'        => 'Описание',
+					'name'         => 'cf_desc',
+					'type'         => 'textarea',
+					'instructions' => 'Текст под заголовком',
+					'default_value' => 'Свяжитесь с нами, чтобы получить консультацию, подобрать решение и запросить коммерческое предложение.',
+					'rows'         => 3,
+				),
+				array(
+					'key'          => 'field_cf_bg',
+					'label'        => 'Фоновое изображение',
+					'name'         => 'cf_bg',
+					'type'         => 'image',
+					'instructions' => 'Фоновый рисунок секции (по умолчанию bg-7.png)',
+					'return_format' => 'array',
+					'library'      => 'all',
+					'mime_types'   => 'jpg,jpeg,png,webp',
+				),
+				array(
+					'key'          => 'field_cf_viber_icon',
+					'label'        => 'Иконка Viber',
+					'name'         => 'cf_viber_icon',
+					'type'         => 'image',
+					'instructions' => 'Иконка Viber (SVG)',
+					'return_format' => 'array',
+					'library'      => 'all',
+					'mime_types'   => 'svg',
+				),
+				array(
+					'key'          => 'field_cf_telegram_icon',
+					'label'        => 'Иконка Telegram',
+					'name'         => 'cf_telegram_icon',
+					'type'         => 'image',
+					'instructions' => 'Иконка Telegram (SVG)',
+					'return_format' => 'array',
+					'library'      => 'all',
+					'mime_types'   => 'svg',
+				),
+				array(
+					'key'          => 'field_cf_whatsapp_icon',
+					'label'        => 'Иконка WhatsApp',
+					'name'         => 'cf_whatsapp_icon',
+					'type'         => 'image',
+					'instructions' => 'Иконка WhatsApp (SVG)',
+					'return_format' => 'array',
+					'library'      => 'all',
+					'mime_types'   => 'svg',
+				),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'page_template',
+						'operator' => '==',
+						'value'    => 'front-page.php',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'active'                => true,
+		) );
+	}
+}
+add_action( 'acf/init', 'belsks_register_contact_form_acf_fields' );
 

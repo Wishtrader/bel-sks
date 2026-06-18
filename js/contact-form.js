@@ -24,8 +24,11 @@
 	// Real-time validation for phone input
 	if (contactInput) {
 		contactInput.addEventListener('input', function() {
-			const cleaned = this.value.replace(/[^0-9\s\+\-\(\)]/g, '');
-			if (cleaned !== this.value) this.value = cleaned;
+			// IMask handles formatting; only strip invalid chars if no IMask
+			if (!this._imask) {
+				const cleaned = this.value.replace(/[^0-9\s\+\-\(\)]/g, '');
+				if (cleaned !== this.value) this.value = cleaned;
+			}
 		});
 	}
 
@@ -80,6 +83,10 @@
 		.then(data => {
 			if (data.success) {
 				form.reset();
+				// Sync IMask after reset
+				if (contactInput && contactInput._imask) {
+					contactInput._imask.value = '';
+				}
 				feedbackEl.textContent = 'Спасибо! Ваша заявка отправлена.';
 				feedbackEl.classList.add('text-green-600');
 			} else {

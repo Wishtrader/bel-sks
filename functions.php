@@ -8,8 +8,13 @@
  */
 
 if ( ! defined( '_S_VERSION' ) ) {
-	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.0' );
+	// Auto-bust asset cache on every edit so changes are visible immediately.
+	$style_path = get_template_directory() . '/style.css';
+	$ver        = '1.0.0';
+	if ( file_exists( $style_path ) ) {
+		$ver .= '.' . filemtime( $style_path );
+	}
+	define( '_S_VERSION', $ver );
 }
 
 /**
@@ -229,13 +234,44 @@ function belsks_theme_toggle_script() {
 			localStorage.setItem('theme', isDark ? 'dark' : 'light');
 			// Update gradient backgrounds
 			document.querySelectorAll('[class*="bg-gradient"]').forEach(el => {
-				if (isDark) {
-					el.classList.add('dark');
-				}
+				el.classList.toggle('dark', isDark);
 			});
+			applyGTranslateTheme(isDark);
 			if (typeof lucide !== 'undefined') {
 				lucide.createIcons();
 			}
+		}
+
+		// GTranslate injects its own markup asynchronously with its own
+		// (often !important / inline) colors, so CSS alone can't reliably
+		// recolor it. Force the language-switch text to follow the theme.
+		function applyGTranslateTheme(isDark) {
+			const color = isDark ? '#e5e7eb' : '#222222';
+			const sel = '.gtranslate_wrapper, .gtranslate_loader, .goog-te-menu-value, .gt_selector, .gt_float_switcher';
+			document.querySelectorAll(sel).forEach(root => {
+				root.style.setProperty('color', color, 'important');
+				root.querySelectorAll('a, span').forEach(el => {
+					el.style.setProperty('color', color, 'important');
+				});
+			});
+		}
+
+		function syncGTranslateTheme() {
+			applyGTranslateTheme(document.documentElement.classList.contains('dark'));
+		}
+
+		// Re-apply once GTranslate renders its widget (it loads async).
+		if (window.MutationObserver) {
+			const gopts = new MutationObserver(() => { syncGTranslateTheme(); });
+			gopts.observe(document.body, { childList: true, subtree: true });
+			// Stop observing after a few seconds once it has had time to render.
+			setTimeout(() => gopts.disconnect(), 8000);
+		} else {
+			let gTries = 0;
+			const gTimer = setInterval(() => {
+				syncGTranslateTheme();
+				if (++gTries > 40) clearInterval(gTimer);
+			}, 200);
 		}
 
 		function initIcons() {
@@ -246,10 +282,12 @@ function belsks_theme_toggle_script() {
 			}
 		}
 		initIcons();
+		syncGTranslateTheme();
+		window.addEventListener('load', () => setTimeout(syncGTranslateTheme, 1000));
 	</script>
 	<?php
- }
- add_action( 'wp_head', 'belsks_theme_toggle_script', 30 );
+  }
+  add_action( 'wp_head', 'belsks_theme_toggle_script', 30 );
 
 /**
  * Add hidden GTranslate widget to ensure JS loads

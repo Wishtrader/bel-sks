@@ -1,4 +1,14 @@
 (function() {
+	function syncCartLinks(count) {
+		document.querySelectorAll('[data-cart-link]').forEach(function(link) {
+			if (count > 0) {
+				link.classList.remove('hidden');
+			} else {
+				link.classList.add('hidden');
+			}
+		});
+	}
+
 	function updateCartCount(count) {
 		var badges = document.querySelectorAll('[data-cart-count]');
 		badges.forEach(function(b) {
@@ -10,6 +20,7 @@
 				b.classList.add('hidden');
 			}
 		});
+		syncCartLinks(count);
 	}
 
 	function refreshFromFragments(fragments) {
@@ -19,6 +30,7 @@
 			var tmp = document.createElement('div');
 			tmp.innerHTML = badgeHtml;
 			var fresh = tmp.firstElementChild;
+			var count = fresh ? parseInt(fresh.textContent, 10) : 0;
 			document.querySelectorAll('[data-cart-count]').forEach(function(old) {
 				if (fresh) {
 					old.replaceWith(fresh.cloneNode(true));
@@ -27,6 +39,7 @@
 					old.textContent = '0';
 				}
 			});
+			syncCartLinks(count);
 		}
 	}
 

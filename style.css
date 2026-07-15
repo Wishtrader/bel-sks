@@ -21,7 +21,7 @@ section {
 	margin-bottom: 0 !important;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1080px) {
 	.custom-logo {
 		width: 120px;
 	}
@@ -168,6 +168,23 @@ h1 {
 	color: #60a5fa !important;
 }
 
+/* GTranslate language switcher (desktop, top-right) - follow theme */
+.gtranslate_wrapper,
+.gtranslate_wrapper a,
+.gtranslate_wrapper span,
+.gtranslate_wrapper .goog-te-menu-value,
+.gtranslate_wrapper .goog-te-menu-value span {
+	color: #222222;
+}
+
+.dark .site-header .gtranslate_wrapper,
+.dark .site-header .gtranslate_wrapper a,
+.dark .site-header .gtranslate_wrapper span,
+.dark .site-header .gtranslate_wrapper .goog-te-menu-value,
+.dark .site-header .gtranslate_wrapper .goog-te-menu-value span {
+	color: #e5e7eb !important;
+}
+
 .site-header .text-sm,
 .site-header .text-sm a,
 .site-header .text-sm span,
@@ -266,7 +283,7 @@ h1 {
 }
 
 /* Mobile Header & Menu */
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1079px) {
 	.site-header {
 		position: fixed;
 		top: 0;
@@ -304,6 +321,14 @@ h1 {
 	.dark .mobile-search-input {
 		background: #1f2937 !important;
 		border-color: #374151 !important;
+	}
+}
+
+/* Hide the floating GTranslate language switcher (BE/EN/RU) in the
+   mobile header (<1080px); the switcher lives inside the mobile menu. */
+@media screen and (max-width: 1079px) {
+	.gtranslate_wrapper {
+		display: none !important;
 	}
 }
 
@@ -363,6 +388,78 @@ body.menu-open {
 
 .dark .text-blue-600 {
 	color: #60a5fa !important;
+}
+
+/* ============================================================
+   Generic dark mode for utility classes used across all pages
+   (inner page templates rely on these since they have no
+   per-section dark CSS and no inline dark: variants)
+   ============================================================ */
+
+/* Light page/section backgrounds -> dark */
+.dark .bg-\[\#f7f7fb\],
+.dark .bg-\[\#f5f5f9\],
+.dark .bg-\[\#f8fafc\],
+.dark .bg-\[\#eef2f9\] {
+	background-color: #1f2937 !important;
+}
+
+/* Generic white cards -> dark (exclude the theme toggle thumb/track,
+   header/footer have their own handling) */
+.dark .bg-white:not(.toggle-thumb):not(.toggle-track) {
+	background-color: #1f2937 !important;
+	border-color: #374151 !important;
+}
+
+/* Light slate/gray fills -> dark (exclude theme toggle track) */
+.dark .bg-slate-50:not(.toggle-track),
+.dark .bg-slate-100:not(.toggle-track),
+.dark .bg-slate-200:not(.toggle-track),
+.dark .bg-gray-50:not(.toggle-track),
+.dark .bg-gray-100:not(.toggle-track),
+.dark .bg-gray-200:not(.toggle-track) {
+	background-color: #374151 !important;
+	border-color: #4b5563 !important;
+}
+
+/* Lucide icons use currentColor; force them light in dark mode */
+.dark [data-lucide],
+.dark .lucide {
+	color: #e5e7eb !important;
+}
+
+/* Brand/navy text on light -> light text in dark mode */
+.dark .text-\[\#1e3a5f\],
+.dark .text-\[\#3f5d7e\],
+.dark .text-primary {
+	color: #e5e7eb !important;
+}
+
+/* slate text scale -> light scale (mirrors gray scale above) */
+.dark .text-slate-900,
+.dark .text-slate-800 {
+	color: #f3f4f6 !important;
+}
+
+.dark .text-slate-700 {
+	color: #d1d5db !important;
+}
+
+.dark .text-slate-600 {
+	color: #9ca3af !important;
+}
+
+.dark .text-slate-500,
+.dark .text-slate-400 {
+	color: #94a3b8 !important;
+}
+
+/* Light slate borders -> dark borders */
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-300,
+.dark .border-\[\#D0D6E8\] {
+	border-color: #374151 !important;
 }
 
 /* Dark mode gradient overlays */
@@ -772,11 +869,22 @@ body.menu-open {
 }
 
 .news-section a.group {
-	background-color: transparent !important;
+	background-color: #ffffff !important;
+	color: #222222 !important;
 }
 
 .dark .news-section a.group {
-	background-color: transparent !important;
+	background-color: #1f2937 !important;
+	border-color: #374151 !important;
+	color: #e5e7eb !important;
+}
+
+/* Cart icon color in dark mode (desktop + mobile) */
+.dark [data-cart-link],
+.dark [data-cart-link] [data-lucide],
+.dark [data-cart-link] .lucide,
+.dark [data-cart-link] svg {
+	color: #e5e7eb !important;
 }
 
 /* Current page nav link highlight */
@@ -786,4 +894,11 @@ body.menu-open {
 }
 .dark .current-menu-item > a {
 	color: #60a5fa !important;
+}
+
+/* Cart: when hidden (empty cart) it must win over the inline-flex
+   display utility that is also on the same element. */
+[data-cart-link].hidden,
+[data-cart-count].hidden {
+	display: none !important;
 }

@@ -362,7 +362,7 @@ get_header();
 					while ( $news_query->have_posts() ) {
 						$news_query->the_post();
 						?>
-						<a href="<?php the_permalink(); ?>" class="group cursor-pointer block !bg-white shadow">
+						<a href="<?php the_permalink(); ?>" class="group cursor-pointer block bg-white dark:bg-gray-800 shadow">
 							<div class="overflow-hidden mb-4 h-48 bg-white ">
 								<?php if ( has_post_thumbnail() ) : ?>
 									<?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300' ) ); ?>

@@ -356,10 +356,6 @@ function belsks_language_switcher_script() {
 add_action( 'wp_footer', 'belsks_language_switcher_script', 20 );
 
 function belsks_nav_menu_css_class( $classes, $item, $args, $depth ) {
-	if ( in_array( 'current-menu-item', $classes ) || in_array( 'current_page_item', $classes ) ) {
-		$classes[] = 'text-blue-600';
-		$classes[] = 'dark:text-blue-400';
-	}
 	return $classes;
 }
 add_filter( 'nav_menu_css_class', 'belsks_nav_menu_css_class', 10, 4 );
@@ -1094,4 +1090,324 @@ function belsks_register_contact_form_acf_fields() {
 	}
 }
 add_action( 'acf/init', 'belsks_register_contact_form_acf_fields' );
+
+/**
+ * Register ACF Fields for Vacancy page (without location — rendered via custom meta box).
+ */
+function belsks_register_vacancy_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'    => 'group_vacancy_fields',
+		'title'  => 'Данные страницы «Вакансии»',
+		'fields' => array(
+
+			// ── Hero Tab ──
+			array(
+				'key'       => 'field_vacancy_hero_tab',
+				'label'     => 'Шапка (Hero)',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_vacancy_hero_title',
+				'label'        => 'Заголовок',
+				'name'         => 'vacancy_hero_title',
+				'type'         => 'text',
+				'default_value' => 'Вакансии',
+			),
+			array(
+				'key'          => 'field_vacancy_hero_desc',
+				'label'        => 'Описание',
+				'name'         => 'vacancy_hero_desc',
+				'type'         => 'textarea',
+				'default_value' => 'В связи с развитием компании мы заинтересованы в привлечении квалифицированных специалистов, готовых становиться частью команды и расти вместе с нами. Актуальные вакансии представлены на этой странице.',
+				'rows'         => 3,
+			),
+
+			// ── Vacancies Tab ──
+			array(
+				'key'       => 'field_vacancy_list_tab',
+				'label'     => 'Список вакансий',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_vacancy_items',
+				'label'        => 'Вакансии',
+				'name'         => 'vacancy_items',
+				'type'         => 'repeater',
+				'collapsed'    => 'field_vacancy_item_title',
+				'button_label' => 'Добавить вакансию',
+				'layout'       => 'block',
+				'sub_fields'   => array(
+					array(
+						'key'          => 'field_vacancy_item_title',
+						'label'        => 'Название',
+						'name'         => 'title',
+						'type'         => 'text',
+						'default_value' => 'Руководитель проекта',
+					),
+					array(
+						'key'          => 'field_vacancy_item_experience',
+						'label'        => 'Опыт работы',
+						'name'         => 'experience',
+						'type'         => 'text',
+						'default_value' => 'Требуемый опыт работы: от 3 лет.',
+					),
+					array(
+						'key'          => 'field_vacancy_item_responsibilities',
+						'label'        => 'Обязанности',
+						'name'         => 'responsibilities',
+						'type'         => 'textarea',
+						'rows'         => 5,
+						'instructions' => 'Каждый пункт с новой строки',
+					),
+					array(
+						'key'          => 'field_vacancy_item_requirements',
+						'label'        => 'Требования',
+						'name'         => 'requirements',
+						'type'         => 'textarea',
+						'rows'         => 5,
+						'instructions' => 'Каждый пункт с новой строки',
+					),
+					array(
+						'key'          => 'field_vacancy_item_conditions',
+						'label'        => 'Условия',
+						'name'         => 'conditions',
+						'type'         => 'textarea',
+						'rows'         => 5,
+						'instructions' => 'Каждый пункт с новой строки',
+					),
+				),
+			),
+
+			// ── Bottom CTA Tab ──
+			array(
+				'key'       => 'field_vacancy_cta_tab',
+				'label'     => 'Нижний блок (CTA)',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_vacancy_cta_title',
+				'label'        => 'Заголовок',
+				'name'         => 'vacancy_cta_title',
+				'type'         => 'text',
+				'default_value' => 'Не нашли подходящую вакансию?',
+			),
+			array(
+				'key'          => 'field_vacancy_cta_desc',
+				'label'        => 'Описание',
+				'name'         => 'vacancy_cta_desc',
+				'type'         => 'textarea',
+				'default_value' => 'Отправьте ваше резюме на почту — мы рассмотрим его и свяжемся с вами при появлении подходящей позиции.',
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_vacancy_cta_email',
+				'label'        => 'E-mail для отклика',
+				'name'         => 'vacancy_cta_email',
+				'type'         => 'email',
+				'default_value' => 'hr@belsks.by',
+			),
+			array(
+				'key'          => 'field_vacancy_cta_bg',
+				'label'        => 'Фоновое изображение',
+				'name'         => 'vacancy_cta_bg',
+				'type'         => 'image',
+				'return_format' => 'url',
+				'mime_types'   => 'jpg,jpeg,png,webp',
+			),
+		),
+	) );
+}
+add_action( 'acf/init', 'belsks_register_vacancy_acf_fields' );
+
+/**
+ * Register ACF Fields for Shipping page (without location — rendered via custom meta box).
+ */
+function belsks_register_shipping_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'    => 'group_shipping_fields',
+		'title'  => 'Данные страницы «Доставка и оплата»',
+		'fields' => array(
+
+			// ── Hero Tab ──
+			array(
+				'key'       => 'field_shipping_hero_tab',
+				'label'     => 'Шапка (Hero)',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_shipping_hero_title',
+				'label'        => 'Заголовок',
+				'name'         => 'shipping_hero_title',
+				'type'         => 'text',
+				'default_value' => 'Доставка и оплата',
+			),
+			array(
+				'key'          => 'field_shipping_hero_desc',
+				'label'        => 'Описание',
+				'name'         => 'shipping_hero_desc',
+				'type'         => 'textarea',
+				'default_value' => 'Условия поставки и оплаты согласовываются индивидуально в зависимости от типа оборудования, объёма проекта и особенностей объекта.',
+				'rows'         => 3,
+			),
+
+			// ── Payment Tab ──
+			array(
+				'key'       => 'field_shipping_payment_tab',
+				'label'     => 'Оплата',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_shipping_payment_title',
+				'label'        => 'Заголовок',
+				'name'         => 'shipping_payment_title',
+				'type'         => 'text',
+				'default_value' => 'Оплата',
+			),
+			array(
+				'key'          => 'field_shipping_payment_desc',
+				'label'        => 'Описание',
+				'name'         => 'shipping_payment_desc',
+				'type'         => 'textarea',
+				'default_value' => 'Мы работаем с юридическими лицами и согласовываем условия оплаты индивидуально — с учётом состава проекта, объёма поставки и формата сотрудничества.',
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_shipping_payment_items',
+				'label'        => 'Пункты',
+				'name'         => 'shipping_payment_items',
+				'type'         => 'textarea',
+				'default_value' => "Безналичный расчёт\nПодготовка коммерческого предложения\nСогласование условий с менеджером\nИндивидуальный подход к проектным поставкам",
+				'rows'         => 6,
+				'instructions' => 'Каждый пункт с новой строки',
+			),
+
+			// ── Delivery Tab ──
+			array(
+				'key'       => 'field_shipping_delivery_tab',
+				'label'     => 'Доставка',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_shipping_delivery_title',
+				'label'        => 'Заголовок',
+				'name'         => 'shipping_delivery_title',
+				'type'         => 'text',
+				'default_value' => 'Доставка',
+			),
+			array(
+				'key'          => 'field_shipping_delivery_desc',
+				'label'        => 'Описание',
+				'name'         => 'shipping_delivery_desc',
+				'type'         => 'textarea',
+				'default_value' => 'Сроки и формат доставки зависят от состава заказа, наличия оборудования, адреса объекта и этапов реализации проекта. Мы организуем поставку с учётом согласованных сроков и специфики объекта.',
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_shipping_delivery_items',
+				'label'        => 'Пункты',
+				'name'         => 'shipping_delivery_items',
+				'type'         => 'textarea',
+				'default_value' => "Доставка на объект\nСамовывоз\nСогласование сроков поставки\nКоординация логистики с менеджером",
+				'rows'         => 6,
+				'instructions' => 'Каждый пункт с новой строки',
+			),
+		),
+	) );
+}
+add_action( 'acf/init', 'belsks_register_shipping_acf_fields' );
+
+/**
+ * Map page template slug to field group key.
+ */
+function belsks_get_page_field_group( $post_id ) {
+	$template      = get_page_template_slug( $post_id );
+	$front_page_id = belsks_get_front_page_id();
+
+	if ( (int) $post_id === $front_page_id ) {
+		return 'group_contact_form_fields';
+	}
+
+	$template_map = array(
+		'vacancy.php'   => 'group_vacancy_fields',
+		'about.php'     => 'group_about_fields',
+		'services.php'  => 'group_services_fields',
+		'shiping.php'   => 'group_shipping_fields',
+		'catalog.php'   => 'group_catalog_fields',
+		'contacts.php'  => 'group_contact_fields',
+		'news.php'      => 'group_news_fields',
+		'projects.php'  => 'group_projects_page_fields',
+	);
+
+	return isset( $template_map[ $template ] ) ? $template_map[ $template ] : null;
+}
+
+/**
+ * Register ONE meta box for all page templates.
+ */
+function belsks_add_page_metabox() {
+	add_meta_box(
+		'belsks_page_fields_metabox',
+		'Данные страницы',
+		'belsks_render_page_metabox',
+		'page',
+		'normal',
+		'high'
+	);
+}
+add_action( 'add_meta_boxes', 'belsks_add_page_metabox', 20 );
+
+/**
+ * Render the meta box — detect template and show matching ACF fields.
+ */
+function belsks_render_page_metabox( $post ) {
+	if ( ! function_exists( 'acf_get_field_group' ) ) {
+		echo '<p>ACF неактивен.</p>';
+		return;
+	}
+
+	$group_key = belsks_get_page_field_group( $post->ID );
+
+	if ( ! $group_key ) {
+		echo '<p>Для этой страницы нет кастомных полей.</p>';
+		return;
+	}
+
+	$field_group = acf_get_field_group( $group_key );
+	if ( ! $field_group ) {
+		echo '<p>Группа полей не найдена.</p>';
+		return;
+	}
+
+	$fields = acf_get_fields( $field_group );
+	if ( empty( $fields ) ) {
+		echo '<p>Поля не найдены.</p>';
+		return;
+	}
+
+	acf_form_data( array(
+		'post_id' => $post->ID,
+	) );
+
+	acf_render_fields( $fields, $post->ID );
+}
 

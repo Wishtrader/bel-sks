@@ -778,3 +778,12 @@ body.menu-open {
 .dark .news-section a.group {
 	background-color: transparent !important;
 }
+
+/* Current page nav link highlight */
+.current-menu-item > a {
+	color: #2563eb !important;
+	font-weight: 600;
+}
+.dark .current-menu-item > a {
+	color: #60a5fa !important;
+}

@@ -75,13 +75,17 @@
 		submitBtn.disabled = true;
 		submitBtn.textContent = 'Отправка...';
 
-		fetch('/wp-admin/admin-ajax.php', {
+		fetch(belsksContact.ajaxUrl, {
 			method: 'POST',
 			body: formData
 		})
 		.then(response => response.json())
 		.then(data => {
 			if (data.success) {
+				if (belsksContact.thankYouUrl) {
+					window.location.href = belsksContact.thankYouUrl;
+					return;
+				}
 				form.reset();
 				// Sync IMask after reset
 				if (contactInput && contactInput._imask) {

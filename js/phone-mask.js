@@ -12,7 +12,7 @@
 
 	function getPhoneInputs() {
 		return document.querySelectorAll(
-			'input[name="contact_phone"], #billing_phone, input[name="billing_phone"], input[name="billing_phone_i"]'
+			'input[name="contact_phone"], input[name="contact"], #billing_phone, input[name="billing_phone"], input[name="billing_phone_i"]'
 		);
 	}
 

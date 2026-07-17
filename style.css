@@ -756,6 +756,16 @@ body.menu-open {
 	color: #f3f4f6 !important;
 }
 
+/* Dark mode for "Thank You" page section */
+.dark .thank-you-section {
+	background-color: #111827 !important;
+}
+
+/* Dark mode for "404" page section */
+.dark .error-404-section {
+	background-color: #111827 !important;
+}
+
 /* Dark mode for "Contact Form" section */
 .dark .contact-form-section {
 	background-color: #111827 !important;
@@ -891,6 +901,8 @@ body.menu-open {
 .current-menu-item > a {
 	color: #2563eb !important;
 	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 4px;
 }
 .dark .current-menu-item > a {
 	color: #60a5fa !important;

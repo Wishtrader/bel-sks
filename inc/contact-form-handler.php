@@ -6,6 +6,7 @@ function belsks_handle_contact_form_submission() {
 	// Sanitize inputs
 	$name    = sanitize_text_field( $_POST['name'] ?? '' );
 	$contact = sanitize_text_field( $_POST['contact'] ?? '' );
+	$email   = sanitize_email( $_POST['email'] ?? '' );
 	$message = sanitize_textarea_field( $_POST['message'] ?? '' );
 
 	// Validation
@@ -37,6 +38,9 @@ function belsks_handle_contact_form_submission() {
 	$subject = 'Новая заявка с сайта БелСКС';
 	$body    = "Имя: {$name}\n";
 	$body   .= "Связь: {$contact}\n";
+	if ( $email ) {
+		$body .= "E-mail: {$email}\n";
+	}
 	$body   .= "Комментарий: {$message}\n";
 	$body   .= "\n---\nОтправлено с: " . home_url();
 

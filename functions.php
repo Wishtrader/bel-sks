@@ -838,6 +838,26 @@ function belsks_enqueue_contact_form_script() {
 		true
 	);
 
+	$thank_you_url = '';
+	$thank_you_page = get_pages(
+		array(
+			'meta_key'   => '_wp_page_template',
+			'meta_value' => 'thank-you.php',
+		)
+	);
+	if ( ! empty( $thank_you_page ) ) {
+		$thank_you_url = get_permalink( $thank_you_page[0]->ID );
+	}
+
+	wp_localize_script(
+		'belsks-contact-form',
+		'belsksContact',
+		array(
+			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'thankYouUrl'  => $thank_you_url,
+		)
+	);
+
 	if ( class_exists( 'WooCommerce' ) ) {
 		wp_enqueue_script(
 			'belsks-cart-fragments',
@@ -1128,6 +1148,178 @@ function belsks_register_contact_form_acf_fields() {
 	}
 }
 add_action( 'acf/init', 'belsks_register_contact_form_acf_fields' );
+
+/**
+ * Register ACF Fields for Thank You page.
+ */
+function belsks_register_thank_you_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'    => 'group_thank_you_fields',
+		'title'  => 'Страница «Спасибо»',
+		'fields' => array(
+			array(
+				'key'          => 'field_ty_bg',
+				'label'        => 'Фоновое изображение (десктоп)',
+				'name'         => 'ty_bg',
+				'type'         => 'image',
+				'instructions' => 'Фоновый рисунок для десктопной версии (по умолчанию thank-you-bg.png)',
+				'return_format' => 'array',
+				'library'      => 'all',
+				'mime_types'   => 'jpg,jpeg,png,webp',
+			),
+			array(
+				'key'          => 'field_ty_bg_mobile',
+				'label'        => 'Фоновое изображение (мобильная версия)',
+				'name'         => 'ty_bg_mobile',
+				'type'         => 'image',
+				'instructions' => 'Фоновый рисунок для мобильной версии (по умолчанию thank-you-bg-mobile.png)',
+				'return_format' => 'array',
+				'library'      => 'all',
+				'mime_types'   => 'jpg,jpeg,png,webp',
+			),
+			array(
+				'key'          => 'field_ty_heading',
+				'label'        => 'Заголовок',
+				'name'         => 'ty_heading',
+				'type'         => 'textarea',
+				'instructions' => 'Заголовок страницы (первая строка —普通, вторая — курсив)',
+				'default_value' => "Спасибо,\nмы получили вашу заявку!",
+				'rows'         => 2,
+			),
+			array(
+				'key'          => 'field_ty_desc',
+				'label'        => 'Описание',
+				'name'         => 'ty_desc',
+				'type'         => 'textarea',
+				'instructions' => 'Текст под заголовком',
+				'default_value' => 'После обработки заявки наш специалист свяжется с вами для уточнения деталей, подготовки предложения или консультации.',
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_ty_button_text',
+				'label'        => 'Текст кнопки',
+				'name'         => 'ty_button_text',
+				'type'         => 'text',
+				'instructions' => 'Текст кнопки-ссылки',
+				'default_value' => 'Вернуться на главную',
+			),
+			array(
+				'key'          => 'field_ty_button_url',
+				'label'        => 'URL кнопки',
+				'name'         => 'ty_button_url',
+				'type'         => 'url',
+				'instructions' => 'Куда ведёт кнопка',
+				'default_value' => '/',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param'    => 'page_template',
+					'operator' => '==',
+					'value'    => 'thank-you.php',
+				),
+			),
+		),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'active'                => true,
+	) );
+}
+add_action( 'acf/init', 'belsks_register_thank_you_acf_fields' );
+
+/**
+ * Register ACF Fields for 404 page.
+ * Creates a page with slug "404" in WP to edit these fields.
+ */
+function belsks_register_404_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'    => 'group_404_fields',
+		'title'  => 'Страница 404',
+		'fields' => array(
+			array(
+				'key'          => 'field_e404_bg',
+				'label'        => 'Фоновое изображение (десктоп)',
+				'name'         => 'e404_bg',
+				'type'         => 'image',
+				'instructions' => 'Фон для десктопа (по умолчанию 404-bg.png)',
+				'return_format' => 'array',
+				'library'      => 'all',
+				'mime_types'   => 'jpg,jpeg,png,webp',
+			),
+			array(
+				'key'          => 'field_e404_bg_mobile',
+				'label'        => 'Фоновое изображение (мобильная версия)',
+				'name'         => 'e404_bg_mobile',
+				'type'         => 'image',
+				'instructions' => 'Фон для мобилки (по умолчанию 404-bg-mobile.png)',
+				'return_format' => 'array',
+				'library'      => 'all',
+				'mime_types'   => 'jpg,jpeg,png,webp',
+			),
+			array(
+				'key'          => 'field_e404_heading_top',
+				'label'        => 'Заголовок (первая строка)',
+				'name'         => 'e404_heading_top',
+				'type'         => 'text',
+				'instructions' => 'Например: 404',
+				'default_value' => '404',
+			),
+			array(
+				'key'          => 'field_e404_heading_bottom',
+				'label'        => 'Заголовок (вторая строка)',
+				'name'         => 'e404_heading_bottom',
+				'type'         => 'text',
+				'instructions' => 'Например: Страница не найдена',
+				'default_value' => 'Страница не найдена',
+			),
+			array(
+				'key'          => 'field_e404_desc',
+				'label'        => 'Описание',
+				'name'         => 'e404_desc',
+				'type'         => 'textarea',
+				'instructions' => 'Текст под заголовком',
+				'default_value' => 'К сожалению, запрашиваемая вами страница не существует или была перемещена.',
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_e404_button_text',
+				'label'        => 'Текст кнопки',
+				'name'         => 'e404_button_text',
+				'type'         => 'text',
+				'instructions' => 'Текст кнопки-ссылки',
+				'default_value' => 'Вернуться на главную',
+			),
+			array(
+				'key'          => 'field_e404_button_url',
+				'label'        => 'URL кнопки',
+				'name'         => 'e404_button_url',
+				'type'         => 'url',
+				'instructions' => 'Куда ведёт кнопка',
+				'default_value' => '/',
+			),
+		),
+		'location' => array(),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'active'                => true,
+	) );
+}
+add_action( 'acf/init', 'belsks_register_404_acf_fields' );
 
 /**
  * Register ACF Fields for Vacancy page (without location — rendered via custom meta box).

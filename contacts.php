@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template Name: Contacts
  * Template Post Type: page
@@ -26,9 +27,9 @@ get_header();
         <span class="text-slate-600">Контакты</span>
       </nav>
 
-      <h1 class="mb-4 text-[44px] font-extrabold leading-[1.4] text-slate-900 sm:mb-5 sm:text-[56px]">
+      <h2 class="mb-4 !text-[26px] lg:!text-[44px] font-bold text-[#222222] sm:mb-5 sm:text-[56px]">
         Контакты
-      </h1>
+      </h2>
     </div>
   </section>
 
@@ -135,8 +136,9 @@ get_header();
             </div>
         </div>
     </section>
-		<?php get_template_part( 'template-parts/contact-form', 'form' ); ?>
+		<?php get_template_part('template-parts/contact-form', 'form'); ?>
 </main>
 
 <?php
+
 get_footer();

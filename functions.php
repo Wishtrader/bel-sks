@@ -1150,6 +1150,227 @@ function belsks_register_contact_form_acf_fields() {
 add_action( 'acf/init', 'belsks_register_contact_form_acf_fields' );
 
 /**
+ * Register ACF Fields for the Contacts page template.
+ */
+function belsks_register_contact_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'    => 'group_contact_fields',
+		'title'  => 'Данные страницы «Контакты»',
+		'fields' => array(
+
+			// ── Hero Tab ──
+			array(
+				'key'       => 'field_contact_hero_tab',
+				'label'     => 'Шапка (Hero)',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_contact_hero_title',
+				'label'        => 'Заголовок',
+				'name'         => 'contact_hero_title',
+				'type'         => 'text',
+				'default_value' => 'Контакты',
+			),
+			array(
+				'key'          => 'field_contact_page_bg',
+				'label'        => 'Фоновое изображение страницы',
+				'name'         => 'contact_page_bg',
+				'type'         => 'image',
+				'instructions' => 'Фоновое изображение на всю страницу (подложка под контентом)',
+				'return_format' => 'array',
+				'library'      => 'all',
+				'mime_types'   => 'jpg,jpeg,png,webp',
+			),
+			array(
+				'key'          => 'field_contact_breadcrumb_home',
+				'label'        => 'Текст «Главная» в хлебных крошках',
+				'name'         => 'contact_breadcrumb_home',
+				'type'         => 'text',
+				'default_value' => 'Главная',
+			),
+
+			// ── Info Cards Tab ──
+			array(
+				'key'       => 'field_contact_info_tab',
+				'label'     => 'Контактные блоки',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_contact_address_title',
+				'label'        => 'Заголовок блока «Адрес офиса»',
+				'name'         => 'contact_address_title',
+				'type'         => 'text',
+				'default_value' => 'Адрес офиса',
+			),
+			array(
+				'key'          => 'field_contact_address',
+				'label'        => 'Адрес офиса',
+				'name'         => 'contact_address',
+				'type'         => 'textarea',
+				'instructions' => 'Каждый пункт с новой строки',
+				'default_value' => "220073, Беларусь, г. Минск,\nул. Бирюзова, 4/5, офис 4004А",
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_contact_hours_title',
+				'label'        => 'Заголовок блока «Время работы»',
+				'name'         => 'contact_hours_title',
+				'type'         => 'text',
+				'default_value' => 'Время работы',
+			),
+			array(
+				'key'          => 'field_contact_hours',
+				'label'        => 'Время работы',
+				'name'         => 'contact_hours',
+				'type'         => 'textarea',
+				'instructions' => 'Каждый пункт с новой строки',
+				'default_value' => "Пн-Пт: 9:00 – 18:00\nСб-Вс: Выходной",
+				'rows'         => 3,
+			),
+			array(
+				'key'          => 'field_contact_phones_title',
+				'label'        => 'Заголовок блока «Телефоны»',
+				'name'         => 'contact_phones_title',
+				'type'         => 'text',
+				'default_value' => 'Телефоны',
+			),
+			array(
+				'key'          => 'field_contact_phones',
+				'label'        => 'Телефоны',
+				'name'         => 'contact_phones',
+				'type'         => 'repeater',
+				'instructions' => 'Добавьте номера телефонов',
+				'button_label' => 'Добавить телефон',
+				'layout'       => 'block',
+				'sub_fields'   => array(
+					array(
+						'key'          => 'field_contact_phone_number',
+						'label'        => 'Номер',
+						'name'         => 'number',
+						'type'         => 'text',
+						'default_value' => '+375 17 238 17 17',
+					),
+				),
+			),
+			array(
+				'key'          => 'field_contact_email_title',
+				'label'        => 'Заголовок блока «Электронная почта»',
+				'name'         => 'contact_email_title',
+				'type'         => 'text',
+				'default_value' => 'Электронная почта',
+			),
+			array(
+				'key'          => 'field_contact_emails',
+				'label'        => 'Электронные почты',
+				'name'         => 'contact_emails',
+				'type'         => 'repeater',
+				'instructions' => 'Добавьте e-mail адреса',
+				'button_label' => 'Добавить e-mail',
+				'layout'       => 'block',
+				'sub_fields'   => array(
+					array(
+						'key'          => 'field_contact_email_address',
+						'label'        => 'E-mail',
+						'name'         => 'email',
+						'type'         => 'email',
+						'default_value' => 'info@belsks.by',
+					),
+				),
+			),
+
+			// ── Social Tab ──
+			array(
+				'key'       => 'field_contact_social_tab',
+				'label'     => 'Соцсети',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_contact_social_label',
+				'label'        => 'Подпись рядом с соцсетями',
+				'name'         => 'contact_social_label',
+				'type'         => 'text',
+				'default_value' => 'Мы в соц сетях',
+			),
+			array(
+				'key'          => 'field_contact_socials',
+				'label'        => 'Социальные сети',
+				'name'         => 'contact_socials',
+				'type'         => 'repeater',
+				'button_label' => 'Добавить соцсеть',
+				'layout'       => 'table',
+				'sub_fields'   => array(
+					array(
+						'key'          => 'field_contact_social_name',
+						'label'        => 'Название',
+						'name'         => 'name',
+						'type'         => 'text',
+						'instructions' => 'Например: Facebook',
+					),
+					array(
+						'key'          => 'field_contact_social_url',
+						'label'        => 'Ссылка',
+						'name'         => 'url',
+						'type'         => 'url',
+					),
+					array(
+						'key'          => 'field_contact_social_icon',
+						'label'        => 'SVG-иконка',
+						'name'         => 'icon',
+						'type'         => 'textarea',
+						'instructions' => 'Вставьте SVG-код иконки (24x24)',
+						'rows'         => 3,
+					),
+				),
+			),
+
+			// ── Map Tab ──
+			array(
+				'key'       => 'field_contact_map_tab',
+				'label'     => 'Карта',
+				'name'      => '',
+				'type'      => 'tab',
+				'placement' => 'top',
+			),
+			array(
+				'key'          => 'field_contact_map_embed',
+				'label'        => 'HTML-код карты (iframe)',
+				'name'         => 'contact_map_embed',
+				'type'         => 'textarea',
+				'instructions' => 'Вставьте готовый iframe от Яндекс.Карт или Google Maps',
+				'default_value' => '<iframe src="https://yandex.by/map-widget/v1/?lang=ru_RU&amp;ll=27.5766%2C53.9082&amp;z=16&amp;mode=search&amp;text=%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%20%D0%91%D0%B5%D0%BB%D0%B0%D1%80%D1%83%D1%81%D1%8C%2C%20%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%91%D0%B8%D1%80%D1%8E%D0%B7%D0%BE%D0%B2%D0%B0%D1%8F%2C%20%D0%B4%D0%BE%D0%BC%204%2F5&amp;pt=27.5766%2C53.9082%2Cpm2rdl" class="w-full h-[400px] sm:h-[450px]" allowfullscreen style="border:0;"></iframe>',
+				'rows'         => 4,
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param'    => 'page_template',
+					'operator' => '==',
+					'value'    => 'contacts.php',
+				),
+			),
+		),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'active'                => true,
+	) );
+}
+add_action( 'acf/init', 'belsks_register_contact_acf_fields' );
+
+/**
  * Register ACF Fields for Thank You page.
  */
 function belsks_register_thank_you_acf_fields() {

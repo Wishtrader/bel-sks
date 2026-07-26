@@ -15,13 +15,13 @@ get_header();
       <div class="absolute top-0 left-[60%] w-px h-full bg-gradient-to-b from-transparent via-gray-200 to-transparent opacity-40 -skew-x-12"></div>
     </div>
 
-    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
+    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0 lg:mt-10">
 
       <!-- Breadcrumbs -->
-      <nav class="mb-8 text-[15px] leading-none text-slate-500 sm:mb-10 md:mt-12">
+      <nav class="mb-6 text-[14px] leading-none text-slate-500 sm:mb-8">
 				<a href="/" class="transition-colors hover:text-slate-700">Главная</a>
-				<span class="mx-2 text-slate-400">/</span>
-				<span class="text-slate-600">Услуги</span>
+				<span class="mx-1 text-slate-400">/</span>
+				<span class="text-[#294F78]">Услуги</span>
     	</nav>
 
       <!-- Title -->

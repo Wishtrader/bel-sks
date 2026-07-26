@@ -33,7 +33,7 @@ get_header();
 						Получить консультацию
 						<i data-lucide="arrow-right" class="w-4 h-4"></i>
 					</a>
-					<a href="/каталог" class="inline-flex items-center gap-2 bg-white text-[#294f78] border border-[#D0D6E8] px-8 py-3 rounded-[4px] font-semibold hover:bg-gray-50 transition-colors">
+					<a href="/katalog" class="inline-flex items-center gap-2 bg-white text-[#294f78] border border-[#D0D6E8] px-8 py-3 rounded-[4px] font-semibold hover:bg-gray-50 transition-colors">
 						В каталог
 					</a>
 				</div>

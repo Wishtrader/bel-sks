@@ -65,11 +65,11 @@ $theme_uri = get_template_directory_uri();
     <section id="contact-form" class="relative overflow-hidden bg-[url('<?php echo
         esc_url($cf_bg_url)
     ; ?>')] bg-cover bg-center bg-no-repeat contact-form-section">
-        <div class="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4 sm:py-20">
+        <div class="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4 pt-14 pb-16 sm:py-20">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 items-start">
                 <!-- Left column: text (1/3) -->
                 <div class="max-w-lg lg:col-span-1 md:min-w-[400px]">
-                    <h2 class="text-3xl sm:text-4xl lg:text-[40px] font-bold text-[#222222] leading-[1.4] mb-6">
+                    <h2 class="text-[26px] sm:text-4xl lg:text-[40px] font-bold text-[#222222] leading-[1.4] mb-6">
                         <?php echo esc_html($cf_heading); ?>
                     </h2>
                     <p class="text-[#3D3D3D] text-lg leading-[1.2] font-light">
@@ -78,7 +78,7 @@ $theme_uri = get_template_directory_uri();
                 </div>
 
                 <!-- Right column: form (2/3) -->
-                <form class="bg-white lg:w-[740px] shadow-lg rounded-sm border border-gray-100 p-5 lg:col-span-2">
+                <form class="bg-white lg:w-[740px] shadow-lg border border-gray-100 p-5 lg:col-span-2">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                         <!-- Name -->
                         <div class="sm:col-span-1">
@@ -92,7 +92,7 @@ $theme_uri = get_template_directory_uri();
                         </div>
                         <!-- Email -->
                         <div class="sm:col-span-1">
-                            <label class="block text-sm font-medium text-transparent mb-2 select-none">email</label>
+                            <label class="hidden lg:block text-sm font-medium text-transparent mb-2 select-none">email</label>
                             <input type="email" name="email" placeholder="E-mail" class="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-700">
                         </div>
                     </div>
@@ -100,13 +100,13 @@ $theme_uri = get_template_directory_uri();
                     <!-- Contact method -->
                     <div class="mb-5 sm:flex-col md:flex md:flex-row items-center">
                         <p class="text-sm font-medium !text-[#294F78] mr-2 mb-2 md:mb-0">Предпочтительный способ связи:</p>
-                        <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <div class="flex flex-wrap items-center gap-x-4 lg:gap-x-6 gap-y-2">
                             <label class="flex items-center cursor-pointer">
                                 <input type="radio" name="contact_method" value="phone" class="w-3 h-3 text-[#294F78] contact-method-radio" checked>
                                 <span class="ml-2 text-gray-500">Телефон</span>
                             </label>
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact_method" value="viber" class="w-4 h-4 text-blue-600 contact-method-radio mr-2">
+                                <input type="radio" name="contact_method" value="viber" class="w-3 h-3 text-blue-600 contact-method-radio mr-2">
                                 <?php if ($cf_viber_url): ?>
                                     <img src="<?php echo
                                         esc_url($cf_viber_url)
@@ -118,7 +118,7 @@ $theme_uri = get_template_directory_uri();
                                 <?php endif; ?>
                             </label>
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact_method" value="telegram" class="w-4 h-4 text-blue-600 contact-method-radio mr-2">
+                                <input type="radio" name="contact_method" value="telegram" class="w-3 h-3 text-blue-600 contact-method-radio mr-2">
                                 <?php if ($cf_telegram_url): ?>
                                     <img src="<?php echo
                                         esc_url($cf_telegram_url)
@@ -130,7 +130,7 @@ $theme_uri = get_template_directory_uri();
                                 <?php endif; ?>
                             </label>
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="contact_method" value="whatsapp" class="w-4 h-4 text-blue-600 contact-method-radio mr-2">
+                                <input type="radio" name="contact_method" value="whatsapp" class="w-3 h-3 text-blue-600 contact-method-radio mr-2">
                                 <?php if ($cf_whatsapp_url): ?>
                                     <img src="<?php echo
                                         esc_url($cf_whatsapp_url)
@@ -153,14 +153,14 @@ $theme_uri = get_template_directory_uri();
                     <!-- Checkbox + Button -->
                     <div class="flex flex-col items-center sm:flex-row sm:items-center gap-4">
                         <label class="flex items-start cursor-pointer">
-                            <input type="checkbox" checked class="w-[20px] h-[20px] text-[#294F78] rounded" style="accent-color: #294F78;">
+                            <input type="checkbox" checked class="min-w-[20px] min-h-[20px] text-[#294F78] rounded" style="accent-color: #294F78;">
                             <span class="ml-2 text-sm text-gray-700">
                                 Соглашаюсь с <a href="/privacy-policy" class="underline hover:text-blue-600">политикой обработки персональных данных</a>
                             </span>
                         </label>
                     </div>
 
-                    <button type="submit" class="mt-4 sm:mt-4 inline-flex items-center justify-center px-2 py-3 bg-[#294F78] hover:bg-blue-800 text-white font-medium rounded shadow-md transition-colors w-[205px] h-[54px]">
+                    <button type="submit" class="mt-4 sm:mt-4 inline-flex items-center justify-center px-2 py-3 bg-[#294F78] hover:bg-blue-800 text-white font-medium rounded shadow-md transition-colors w-full lg:w-[205px] h-[54px]">
                         Отправить заявку
                     </button>
                 </form>

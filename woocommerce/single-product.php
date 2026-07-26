@@ -79,24 +79,24 @@ if ( ! empty( $product_cats ) ) {
 		</div>
 
 		<div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
-			<nav class="mb-8 text-[15px] leading-none text-slate-500 sm:mb-10 md:mt-12">
+			<nav class="mb-6 text-[14px] leading-none text-slate-500 sm:mb-8">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="transition-colors hover:text-slate-700">Главная</a>
-				<span class="mx-2 text-slate-400">/</span>
+				<span class="mx-1 text-slate-400">/</span>
 				<a href="<?php echo esc_url( $catalog_url ); ?>" class="transition-colors hover:text-slate-700">Каталог</a>
 				<?php foreach ( $ancestors as $i => $cat_id ) :
 					$cat = get_term( $cat_id, 'product_cat' );
 					if ( ! $cat || is_wp_error( $cat ) ) { continue; }
 					$is_last = ( $i === count( $ancestors ) - 1 );
 					?>
-					<span class="mx-2 text-slate-400">/</span>
+					<span class="mx-1 text-slate-400">/</span>
 					<?php if ( $is_last ) : ?>
-						<span class="text-slate-600"><?php echo esc_html( $cat->name ); ?></span>
+						<span class="text-[#294F78]"><?php echo esc_html( $cat->name ); ?></span>
 					<?php else : ?>
 						<a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="transition-colors hover:text-slate-700"><?php echo esc_html( $cat->name ); ?></a>
 					<?php endif; ?>
 				<?php endforeach; ?>
-				<span class="mx-2 text-slate-400">/</span>
-				<span class="text-slate-600"><?php echo esc_html( get_the_title() ); ?></span>
+				<span class="mx-1 text-slate-400">/</span>
+				<span class="text-[#294F78]"><?php echo esc_html( get_the_title() ); ?></span>
 			</nav>
 
 			<h1 class="mb-8 text-[28px] font-extrabold leading-[1.2] tracking-[-0.02em] text-slate-900 sm:mb-10 sm:text-[40px] lg:text-[54px]">

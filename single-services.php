@@ -84,17 +84,17 @@ $lead = $service_lead ?: $default_lead;
     </div>
 
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0 md:mt-6">
-      <nav class="mb-6 text-[15px] leading-none text-slate-500 sm:mb-8">
+      <nav class="mb-6 text-[14px] leading-none text-slate-500 sm:mb-8">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="transition-colors hover:text-slate-700">Главная</a>
-        <span class="mx-2 text-slate-400">/</span>
+        <span class="mx-1 text-slate-400">/</span>
         <?php
         $services_page = get_page_by_path( 'uslugi' );
         $services_page = $services_page ? $services_page : get_page_by_title( 'Услуги' );
         $services_url  = $services_page ? get_permalink( $services_page ) : get_post_type_archive_link( 'services' );
         ?>
         <a href="<?php echo esc_url( $services_url ); ?>" class="transition-colors hover:text-slate-700">Услуги</a>
-        <span class="mx-2 text-slate-400">/</span>
-        <span class="text-slate-600"><?php echo esc_html( $service_title ); ?></span>
+        <span class="mx-1 text-slate-400">/</span>
+        <span class="text-[#294F78]"><?php echo esc_html( $service_title ); ?></span>
       </nav>
 
       <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

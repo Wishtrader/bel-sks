@@ -83,7 +83,7 @@ $lead = $service_lead ?: $default_lead;
       <div class="absolute right-0 top-[18%] h-px w-[55%] bg-slate-200/40"></div>
     </div>
 
-    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0 md:mt-6">
+    <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0 md:mt-10">
       <nav class="mb-6 text-[14px] leading-none text-slate-500 sm:mb-8">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="transition-colors hover:text-slate-700">Главная</a>
         <span class="mx-1 text-slate-400">/</span>

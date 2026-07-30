@@ -7,6 +7,16 @@
  */
 
 get_header();
+
+$current_cat_slug = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_GET['category'] ) ) : '';
+
+$all_categories = get_terms( array(
+	'taxonomy'   => 'project_cat',
+	'hide_empty' => true,
+) );
+if ( is_wp_error( $all_categories ) ) {
+	$all_categories = array();
+}
 ?>
 
 <main class="bg-[#f7f7fb]">
@@ -55,33 +65,40 @@ get_header();
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <!-- Tabs -->
       <div class="mb-8 flex flex-wrap gap-2">
-        <button class="rounded-sm border border-[#3f5d7e] bg-white px-5 py-2.5 text-[14px] font-semibold leading-none text-[#3f5d7e] shadow-[0_2px_6px_rgba(15,23,42,0.08)] transition hover:bg-slate-50">
+        <a href="<?php echo esc_url( remove_query_arg( 'category' ) ); ?>"
+           class="rounded-sm border px-5 py-2.5 text-[14px] font-semibold leading-none shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition hover:bg-slate-50 <?php echo empty( $current_cat_slug ) ? 'border-[#3f5d7e] bg-white text-[#3f5d7e] shadow-[0_2px_6px_rgba(15,23,42,0.08)]' : 'border-slate-200 bg-white text-slate-700'; ?>">
           Все проекты
-        </button>
-        <button class="rounded-sm border border-slate-200 bg-white px-5 py-2.5 text-[14px] font-semibold leading-none text-slate-700 shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition hover:bg-slate-50">
-          Стеллажи
-        </button>
-        <button class="rounded-sm border border-slate-200 bg-white px-5 py-2.5 text-[14px] font-semibold leading-none text-slate-700 shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition hover:bg-slate-50">
-          Автоматизация
-        </button>
-        <button class="rounded-sm border border-slate-200 bg-white px-5 py-2.5 text-[14px] font-semibold leading-none text-slate-700 shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition hover:bg-slate-50">
-          Конвейеры
-        </button>
-        <button class="rounded-sm border border-slate-200 bg-white px-5 py-2.5 text-[14px] font-semibold leading-none text-slate-700 shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition hover:bg-slate-50">
-          Комплексные решения
-        </button>
+        </a>
+        <?php foreach ( $all_categories as $cat_term ) : ?>
+          <a href="<?php echo esc_url( add_query_arg( 'category', $cat_term->slug ) ); ?>"
+             class="rounded-sm border px-5 py-2.5 text-[14px] font-semibold leading-none shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition hover:bg-slate-50 <?php echo ( $current_cat_slug === $cat_term->slug ) ? 'border-[#3f5d7e] bg-white text-[#3f5d7e] shadow-[0_2px_6px_rgba(15,23,42,0.08)]' : 'border-slate-200 bg-white text-slate-700'; ?>">
+            <?php echo esc_html( $cat_term->name ); ?>
+          </a>
+        <?php endforeach; ?>
       </div>
 
       <?php
       $paged = max( 1, (int) get_query_var( 'paged' ) );
 
-      $projects_query = new WP_Query( array(
+      $query_args = array(
         'post_type'      => 'projects',
         'post_status'    => 'publish',
         'posts_per_page' => 10,
         'paged'          => $paged,
         'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
-      ) );
+      );
+
+      if ( $current_cat_slug ) {
+        $query_args['tax_query'] = array(
+          array(
+            'taxonomy' => 'project_cat',
+            'field'    => 'slug',
+            'terms'    => $current_cat_slug,
+          ),
+        );
+      }
+
+      $projects_query = new WP_Query( $query_args );
 
       if ( $projects_query->have_posts() ) :
         $projects = array();
@@ -89,15 +106,19 @@ get_header();
           $projects_query->the_post();
           $image_id = (int) get_post_meta( get_the_ID(), 'project_image', true );
           $image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : '';
+          $cat_terms = get_the_terms( get_the_ID(), 'project_cat' );
+          $cat_name = ( $cat_terms && ! is_wp_error( $cat_terms ) ) ? $cat_terms[0]->name : '';
           $projects[] = array(
-            'title' => get_the_title(),
-            'url'   => $image_url,
+            'title'    => get_the_title(),
+            'url'      => $image_url,
+            'link'     => get_permalink(),
+            'category' => $cat_name,
           );
         }
 
         // For any missing items in a block, pad with placeholders.
         while ( count( $projects ) < 10 ) {
-          $projects[] = array( 'title' => '', 'url' => '' );
+          $projects[] = array( 'title' => '', 'url' => '', 'link' => '#', 'category' => '' );
         }
         ?>
 
@@ -116,7 +137,7 @@ get_header();
             $p = $projects[ $i ];
             $s = $sizes_block1[ $i ];
             ?>
-            <a href="#" class="group relative overflow-hidden bg-slate-200 <?php echo esc_attr( "col-span-1 lg:col-span-{$s['col_span']} lg:row-span-{$s['row_span']} {$s['h']}" ); ?>">
+            <a href="<?php echo esc_url( $p['link'] ); ?>" data-category="<?php echo esc_attr( $p['category'] ); ?>" class="group relative overflow-hidden bg-slate-200 <?php echo esc_attr( "col-span-1 lg:col-span-{$s['col_span']} lg:row-span-{$s['row_span']} {$s['h']}" ); ?>">
               <?php if ( $p['url'] ) : ?>
                 <img src="<?php echo esc_url( $p['url'] ); ?>" alt="<?php echo esc_attr( $p['title'] ); ?>" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
               <?php else : ?>
@@ -141,7 +162,7 @@ get_header();
             $p = $projects[ $i + 5 ];
             $s = $sizes_block2[ $i ];
             ?>
-            <a href="#" class="group relative overflow-hidden bg-slate-200 <?php echo esc_attr( "col-span-1 lg:col-span-{$s['col_span']} lg:row-span-{$s['row_span']} {$s['h']}" ); ?>">
+            <a href="<?php echo esc_url( $p['link'] ); ?>" data-category="<?php echo esc_attr( $p['category'] ); ?>" class="group relative overflow-hidden bg-slate-200 <?php echo esc_attr( "col-span-1 lg:col-span-{$s['col_span']} lg:row-span-{$s['row_span']} {$s['h']}" ); ?>">
               <?php if ( $p['url'] ) : ?>
                 <img src="<?php echo esc_url( $p['url'] ); ?>" alt="<?php echo esc_attr( $p['title'] ); ?>" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
               <?php else : ?>
@@ -209,7 +230,12 @@ get_header();
       else :
         ?>
         <p class="rounded-md border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
-          Проекты пока не добавлены.
+          <?php
+          $cat_obj = $current_cat_slug ? get_term_by( 'slug', $current_cat_slug, 'project_cat' ) : false;
+          echo $cat_obj
+            ? 'Проекты в категории «' . esc_html( $cat_obj->name ) . '» пока не добавлены.'
+            : 'Проекты пока не добавлены.';
+          ?>
         </p>
         <?php
       endif;

@@ -280,24 +280,25 @@ get_header();
 			if ($projects_query->have_posts()) {
     			while ($projects_query->have_posts()) {
         			$projects_query->the_post();
-        			$projects[] = array(
+        		$projects[] = array(
             			'title' => get_the_title(),
             			'image' => get_field('project_image'),
-        			);
+            			'url'   => get_permalink(),
+        		);
     			}
     			wp_reset_postdata();
 			}
 
 			// Fill missing projects with placeholders if less than 5
 			while (count($projects) < 5) {
-    			$projects[] = array('title' => 'Проект', 'image' => null);
+    			$projects[] = array('title' => 'Проект', 'image' => null, 'url' => '#');
 			}
 			?>
 
 			<!-- First Row: 3 items (1 large, 2 small) -->
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				<!-- Project 1 (Large) -->
-				<div class="md:col-span-2 lg:col-span-2 row-span-2 overflow-hidden group relative min-h-[400px]">
+				<a href="<?php echo esc_url($projects[0]['url']); ?>" class="block md:col-span-2 lg:col-span-2 row-span-2 overflow-hidden group relative min-h-[400px]">
 					<?php if ($projects[0]['image'] && is_array($projects[0]['image'])): ?>
 						<img src="<?php echo esc_url($projects[0]['image']['url']); ?>" alt="<?php echo
     						esc_attr($projects[0]['title'])
@@ -310,10 +311,10 @@ get_header();
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
 						<span class="text-white font-medium"><?php echo esc_html($projects[0]['title']); ?></span>
 					</div>
-				</div>
+				</a>
 
 				<!-- Project 2 -->
-				<div class="overflow-hidden group relative h-full min-h-[190px]">
+				<a href="<?php echo esc_url($projects[1]['url']); ?>" class="block overflow-hidden group relative h-full min-h-[190px]">
 					<?php if ($projects[1]['image'] && is_array($projects[1]['image'])): ?>
 						<img src="<?php echo esc_url($projects[1]['image']['url']); ?>" alt="<?php echo
     						esc_attr($projects[1]['title'])
@@ -326,10 +327,10 @@ get_header();
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
 						<span class="text-white font-medium"><?php echo esc_html($projects[1]['title']); ?></span>
 					</div>
-				</div>
+				</a>
 
 				<!-- Project 3 -->
-				<div class="overflow-hidden group relative h-full min-h-[190px]">
+				<a href="<?php echo esc_url($projects[2]['url']); ?>" class="block overflow-hidden group relative h-full min-h-[190px]">
 					<?php if ($projects[2]['image'] && is_array($projects[2]['image'])): ?>
 						<img src="<?php echo esc_url($projects[2]['image']['url']); ?>" alt="<?php echo
     						esc_attr($projects[2]['title'])
@@ -342,13 +343,13 @@ get_header();
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
 						<span class="text-white font-medium"><?php echo esc_html($projects[2]['title']); ?></span>
 					</div>
-				</div>
+				</a>
 			</div>
 
 			<!-- Projects 4 & 5 (Full width row) -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 				<!-- Project 4 -->
-				<div class="overflow-hidden group relative h-64">
+				<a href="<?php echo esc_url($projects[3]['url']); ?>" class="block overflow-hidden group relative h-64">
 					<?php if ($projects[3]['image'] && is_array($projects[3]['image'])): ?>
 						<img src="<?php echo esc_url($projects[3]['image']['url']); ?>" alt="<?php echo
     						esc_attr($projects[3]['title'])
@@ -361,10 +362,10 @@ get_header();
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
 						<span class="text-white font-medium"><?php echo esc_html($projects[3]['title']); ?></span>
 					</div>
-				</div>
+				</a>
 
 				<!-- Project 5 -->
-				<div class="overflow-hidden group relative h-64">
+				<a href="<?php echo esc_url($projects[4]['url']); ?>" class="block overflow-hidden group relative h-64">
 					<?php if ($projects[4]['image'] && is_array($projects[4]['image'])): ?>
 						<img src="<?php echo esc_url($projects[4]['image']['url']); ?>" alt="<?php echo
     						esc_attr($projects[4]['title'])
@@ -377,7 +378,7 @@ get_header();
 					<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
 						<span class="text-white font-medium"><?php echo esc_html($projects[4]['title']); ?></span>
 					</div>
-				</div>
+				</a>
 			</div>
 		</div>
 	</section>

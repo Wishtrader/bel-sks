@@ -83,9 +83,6 @@ $catalog_url = $catalog_page ? get_permalink($catalog_page) : home_url('/');
 
 			<div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)] lg:items-start">
 				<aside class="rounded-sm border border-slate-200 bg-white p-4 shadow-[0_2px_12px_rgba(15,23,42,0.08)] sm:p-6">
-					<div class="mb-4 inline-flex rounded-md border border-slate-300 px-5 py-2 text-[18px] font-semibold leading-none text-[#3f5d7e]">
-						Категории
-					</div>
 
 					<ul class="space-y-4">
 						<?php

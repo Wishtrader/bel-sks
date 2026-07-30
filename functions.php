@@ -607,6 +607,39 @@ function belsks_register_projects_cpt() {
 add_action( 'init', 'belsks_register_projects_cpt' );
 
 /**
+ * Register Taxonomy: Категории проектов
+ */
+function belsks_register_project_cat_taxonomy() {
+	$labels = array(
+		'name'              => _x( 'Категории проектов', 'taxonomy general name', 'belsks' ),
+		'singular_name'     => _x( 'Категория проекта', 'taxonomy singular name', 'belsks' ),
+		'search_items'      => __( 'Поиск категорий', 'belsks' ),
+		'all_items'         => __( 'Все категории', 'belsks' ),
+		'parent_item'       => __( 'Родительская категория', 'belsks' ),
+		'parent_item_colon' => __( 'Родительская категория:', 'belsks' ),
+		'edit_item'         => __( 'Редактировать категорию', 'belsks' ),
+		'update_item'       => __( 'Обновить категорию', 'belsks' ),
+		'add_new_item'      => __( 'Добавить новую категорию', 'belsks' ),
+		'new_item_name'     => __( 'Название категории', 'belsks' ),
+		'menu_name'         => __( 'Категории проектов', 'belsks' ),
+	);
+
+	$args = array(
+		'hierarchical'      => true,
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_rest'      => true,
+		'show_in_quick_edit' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'project-category' ),
+	);
+
+	register_taxonomy( 'project_cat', array( 'projects' ), $args );
+}
+add_action( 'init', 'belsks_register_project_cat_taxonomy' );
+
+/**
  * Register ACF Fields for Projects
  */
 function belsks_register_projects_acf_fields() {
@@ -616,28 +649,78 @@ function belsks_register_projects_acf_fields() {
 			'title'    => 'Детали проекта',
 			'fields'   => array(
 				array(
+					'key'           => 'field_projects_description',
+					'label'         => 'Описание проекта',
+					'name'          => 'project_description',
+					'type'          => 'textarea',
+					'instructions'  => 'Краткое описание проекта, отображается справа от галереи',
+					'required'      => 0,
+					'return_format' => 'raw',
+					'rows'          => 6,
+					'placeholder'   => 'Описание проекта...',
+				),
+				array(
+					'key'           => 'field_projects_client',
+					'label'         => 'Заказчик',
+					'name'          => 'project_client',
+					'type'          => 'text',
+					'instructions'  => 'Название компании-заказчика',
+					'required'      => 0,
+					'placeholder'   => 'ООО «Компания»',
+				),
+				array(
+					'key'           => 'field_projects_year',
+					'label'         => 'Год реализации',
+					'name'          => 'project_year',
+					'type'          => 'text',
+					'required'      => 0,
+					'placeholder'   => '2024',
+				),
+				array(
+					'key'           => 'field_projects_area',
+					'label'         => 'Площадь / Объём',
+					'name'          => 'project_area',
+					'type'          => 'text',
+					'instructions'  => 'Например: 5 000 м²',
+					'required'      => 0,
+					'placeholder'   => '5 000 м²',
+				),
+				array(
 					'key'               => 'field_projects_image',
-					'label'             => 'Изображение проекта',
+					'label'             => 'Главное изображение',
 					'name'              => 'project_image',
 					'type'              => 'image',
-					'instructions'      => 'Загрузите изображение проекта',
-					'required'          => 1,
-					'conditional_logic' => 0,
-					'wrapper'           => array(
-						'width' => '',
-						'class' => '',
-						'id'    => '',
-					),
+					'instructions'      => 'Основное изображение проекта (отображается крупно)',
+					'required'          => 0,
 					'return_format'     => 'array',
 					'preview_size'      => 'medium',
-					'library'           => 'all',
-					'min_width'         => '',
-					'min_height'        => '',
-					'min_size'          => '',
-					'max_width'         => '',
-					'max_height'        => '',
-					'max_size'          => '',
 					'mime_types'        => 'jpg,jpeg,png,webp',
+				),
+				array(
+					'key'           => 'field_projects_gallery',
+					'label'         => 'Галерея проекта',
+					'name'          => 'project_gallery',
+					'type'          => 'gallery',
+					'instructions'  => 'Дополнительные изображения. При клике на миниатюру меняется главное изображение.',
+					'required'      => 0,
+					'return_format' => 'array',
+					'preview_size'  => 'thumbnail',
+					'library'       => 'all',
+					'min'           => '',
+					'max'           => '',
+					'mime_types'    => 'jpg,jpeg,png,webp',
+				),
+				array(
+					'key'           => 'field_projects_full_description',
+					'label'         => 'Полное описание',
+					'name'          => 'project_full_description',
+					'type'          => 'wysiwyg',
+					'instructions'  => 'Развёрнутое описание проекта, отображается внизу страницы',
+					'required'      => 0,
+					'tabs'          => 'all',
+					'toolbar'       => 'full',
+					'media_upload'  => 1,
+					'delayed'       => 0,
 				),
 			),
 			'location' => array(
@@ -1861,4 +1944,61 @@ function belsks_render_page_metabox( $post ) {
 
 	acf_render_fields( $fields, $post->ID );
 }
+
+/**
+ * Override single product template for products in "stellage-system" category.
+ * Runs at priority 20 — AFTER WooCommerce's template_loader (priority 10).
+ */
+function belsks_stellazh_template_override( $template ) {
+	$queried = get_queried_object();
+	$debug = "queried_object: " . print_r( $queried, true ) . "\ntemplate: " . $template . "\n";
+
+	if ( ! $queried || ! isset( $queried->post_type ) || 'product' !== $queried->post_type ) {
+		$debug .= "NOT a product post\n";
+		file_put_contents( WP_CONTENT_DIR . '/debug-stellazh.log', $debug );
+		return $template;
+	}
+
+	$debug .= "post_type: product, ID: " . $queried->ID . "\n";
+
+	$cats = get_the_terms( $queried->ID, 'product_cat' );
+	$debug .= "cats: " . print_r( $cats, true ) . "\n";
+
+	if ( empty( $cats ) || is_wp_error( $cats ) ) {
+		$debug .= "no categories\n";
+		file_put_contents( WP_CONTENT_DIR . '/debug-stellazh.log', $debug );
+		return $template;
+	}
+
+	$stellage = get_term_by( 'slug', 'stellage-system', 'product_cat' );
+	$debug .= "stellage-system term: " . print_r( $stellage, true ) . "\n";
+
+	if ( ! $stellage ) {
+		$debug .= "stellage-system term NOT FOUND\n";
+		file_put_contents( WP_CONTENT_DIR . '/debug-stellazh.log', $debug );
+		return $template;
+	}
+
+	foreach ( $cats as $cat ) {
+		$debug .= "checking cat: " . $cat->term_id . " (slug: " . $cat->slug . ")\n";
+		$debug .= "  ancestors: " . print_r( get_ancestors( $cat->term_id, 'product_cat', 'taxonomy' ), true ) . "\n";
+
+		if ( (int) $cat->term_id === (int) $stellage->term_id ) {
+			$debug .= "MATCH! returning stellazh-template.php\n";
+			file_put_contents( WP_CONTENT_DIR . '/debug-stellazh.log', $debug );
+			return get_template_directory() . '/stellazh-template.php';
+		}
+		$anc = get_ancestors( $cat->term_id, 'product_cat', 'taxonomy' );
+		if ( in_array( (int) $stellage->term_id, $anc, true ) ) {
+			$debug .= "ANCESTOR MATCH! returning stellazh-template.php\n";
+			file_put_contents( WP_CONTENT_DIR . '/debug-stellazh.log', $debug );
+			return get_template_directory() . '/stellazh-template.php';
+		}
+	}
+
+	$debug .= "no match found\n";
+	file_put_contents( WP_CONTENT_DIR . '/debug-stellazh.log', $debug );
+	return $template;
+}
+add_filter( 'template_include', 'belsks_stellazh_template_override', 20 );
 

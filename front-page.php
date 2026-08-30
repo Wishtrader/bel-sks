@@ -96,7 +96,7 @@ get_header();
 							</div>
 							<div class="p-5 relative min-h-[226px]">
 								<h3 class="text-lg font-bold text-[#222222] mb-2 leading-[1.2]"><?php echo esc_html($category->name); ?></h3>
-								<p class="text-base text-gray-600 mb-4 leading-[1.2]"><?php echo wp_kses_post($description); ?></p>
+								<p class="text-base text-gray-600 mb-4 leading-[1.2] direction-desc"><?php echo wp_kses_post($description); ?></p>
 								<a href="<?php echo
     								esc_url($category_link)
 								; ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">

@@ -915,6 +915,14 @@ body.menu-open {
 	display: none !important;
 }
 
+/* Direction description line clamp */
+.direction-desc {
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
 /* Single post content links */
 .single-post article a,
 .single-post .entry-content a {

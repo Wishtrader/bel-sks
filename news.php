@@ -69,7 +69,12 @@ get_header();
           ?>
           <a href="<?php the_permalink(); ?>" class="group block overflow-hidden border border-slate-200 bg-white shadow-[0_2px_12px_rgba(15,23,42,0.06)] transition-shadow hover:shadow-[0_4px_20px_rgba(15,23,42,0.10)]">
             <div class="h-[240px] overflow-hidden bg-white sm:h-[280px]">
-              <?php if ( has_post_thumbnail() ) : ?>
+              <?php
+              $card_image = get_field( 'post_card_image' );
+              if ( $card_image ) :
+              ?>
+                <img src="<?php echo esc_url( $card_image['url'] ); ?>" alt="<?php echo esc_attr( $card_image['alt'] ); ?>" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+              <?php elseif ( has_post_thumbnail() ) : ?>
                 <?php the_post_thumbnail( 'medium_large', array( 'class' => 'h-full w-full object-cover transition-transform duration-300 group-hover:scale-105' ) ); ?>
               <?php else : ?>
                 <div class="flex h-full w-full items-center justify-center bg-slate-100">

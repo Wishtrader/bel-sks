@@ -914,3 +914,16 @@ body.menu-open {
 [data-cart-count].hidden {
 	display: none !important;
 }
+
+/* Single post content links */
+.single-post article a,
+.single-post .entry-content a {
+	color: #2563eb !important;
+	text-decoration: underline !important;
+	text-underline-offset: 3px;
+}
+
+.single-post article a:hover,
+.single-post .entry-content a:hover {
+	color: #1d4ed8 !important;
+}

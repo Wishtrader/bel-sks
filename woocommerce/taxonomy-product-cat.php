@@ -77,7 +77,7 @@ $catalog_url = $catalog_page ? get_permalink($catalog_page) : home_url('/');
 
 			<?php if (!empty($current_term->description)): ?>
 				<p class="mb-8 max-w-3xl text-[16px] leading-[1.2] text-slate-600 sm:mb-10">
-					<?php echo esc_html($current_term->description); ?>
+					<?php echo wp_kses_post($current_term->description); ?>
 				</p>
 			<?php endif; ?>
 

@@ -10,13 +10,13 @@
 get_header();
 ?>
 
-<main class="max-w-[1200px] mx-auto px-4 py-8 md:py-12">
+<main class="max-w-[1200px] mx-auto px-4 md:px-0 py-8 md:py-16">
 	<?php
 	while ( have_posts() ) :
 		the_post();
 		?>
 		<!-- Breadcrumbs -->
-		<nav class="flex items-center text-sm text-gray-500 mb-8 overflow-x-auto whitespace-nowrap">
+		<nav class="flex items-center text-sm text-gray-500 mb-8 overflow-x-auto whitespace-nowrap lg:mt-10 px-0">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-blue-600 transition-colors">Главная</a>
 			<span class="mx-2">/</span>
 			<a href="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>" class="hover:text-blue-600 transition-colors">Новости</a>
@@ -68,7 +68,12 @@ get_header();
 						?>
 						<a href="<?php the_permalink(); ?>" class="group bg-white dark:bg-gray-800 flex flex-col sm:flex-row overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
 							<div class="sm:w-2/5 h-48 sm:h-auto overflow-hidden">
-								<?php if ( has_post_thumbnail() ) : ?>
+								<?php
+								$card_image = get_field( 'post_card_image' );
+								if ( $card_image ) :
+								?>
+									<img src="<?php echo esc_url( $card_image['url'] ); ?>" alt="<?php echo esc_attr( $card_image['alt'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+								<?php elseif ( has_post_thumbnail() ) : ?>
 									<?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500' ) ); ?>
 								<?php else : ?>
 									<div class="w-full h-full bg-gray-200 dark:bg-gray-700"></div>

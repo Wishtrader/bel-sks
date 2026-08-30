@@ -1871,6 +1871,57 @@ function belsks_register_shipping_acf_fields() {
 add_action( 'acf/init', 'belsks_register_shipping_acf_fields' );
 
 /**
+ * Register ACF fields for Post type (card image).
+ */
+function belsks_register_post_acf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'      => 'group_post_fields',
+			'title'    => 'Изображение карточки',
+			'fields'   => array(
+				array(
+					'key'               => 'field_post_card_image',
+					'label'             => 'Изображение карточки',
+					'name'              => 'post_card_image',
+					'type'              => 'image',
+					'instructions'      => 'Изображение для превью в списке новостей. Если не загружено, будет использоваться изображение записи по умолчанию.',
+					'required'          => 0,
+					'conditional_logic' => 0,
+					'wrapper'           => array(
+						'width' => '',
+						'class' => '',
+						'id'    => '',
+					),
+					'return_format'     => 'array',
+					'preview_size'      => 'medium',
+					'library'           => 'all',
+					'mime_types'        => 'jpg,jpeg,png,webp',
+				),
+			),
+			'location' => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'post',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'side',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'hide_on_screen'        => '',
+			'active'                => true,
+			'description'           => '',
+			'show_in_rest'          => false,
+		) );
+	}
+}
+add_action( 'acf/init', 'belsks_register_post_acf_fields' );
+
+/**
  * Map page template slug to field group key.
  */
 function belsks_get_page_field_group( $post_id ) {

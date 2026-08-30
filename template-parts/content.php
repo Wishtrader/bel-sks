@@ -29,7 +29,18 @@
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
-	<?php belsks_post_thumbnail(); ?>
+	<?php
+	if ( 'post' === get_post_type() && ! is_singular() ) :
+		$card_image = get_field( 'post_card_image' );
+		if ( $card_image ) :
+		?>
+			<img src="<?php echo esc_url( $card_image['url'] ); ?>" alt="<?php echo esc_attr( $card_image['alt'] ); ?>" class="post-card-image" />
+		<?php else : ?>
+			<?php belsks_post_thumbnail(); ?>
+		<?php endif; ?>
+	<?php else : ?>
+		<?php belsks_post_thumbnail(); ?>
+	<?php endif; ?>
 
 	<div class="entry-content">
 		<?php

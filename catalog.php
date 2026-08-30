@@ -151,7 +151,7 @@ get_header();
 							; ?></a>
 						</h2>
 						<p class="text-[16px] leading-snug text-slate-600">
-							<?php echo esc_html(wp_trim_words($description, 15, '...')); ?>
+							<?php echo wp_kses_post(wp_trim_words($description, 15, '...')); ?>
 						</p>
 					</div>
 				</article>

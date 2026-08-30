@@ -96,7 +96,7 @@ get_header();
 							</div>
 							<div class="p-5 relative min-h-[226px]">
 								<h3 class="text-lg font-bold text-[#222222] mb-2 leading-[1.2]"><?php echo esc_html($category->name); ?></h3>
-								<p class="text-base text-gray-600 mb-4 leading-[1.2]"><?php echo esc_html($description); ?></p>
+								<p class="text-base text-gray-600 mb-4 leading-[1.2]"><?php echo wp_kses_post($description); ?></p>
 								<a href="<?php echo
     								esc_url($category_link)
 								; ?>" class="absolute bottom-[20px] basic-directions-btn bg-white border border-[#D0D6E8] rounded-sm hover:text-white text-[#1e3a5f] px-[20px] py-[5px] font-medium text-sm hover:bg-[#222222] inline-flex items-center gap-1">
@@ -413,7 +413,12 @@ get_header();
         				?>
 						<a href="<?php the_permalink(); ?>" class="group cursor-pointer block bg-white dark:bg-gray-800 shadow">
 							<div class="overflow-hidden mb-4 h-[250px] bg-white ">
-								<?php if (has_post_thumbnail()): ?>
+								<?php
+								$card_image = get_field( 'post_card_image' );
+								if ( $card_image ) :
+								?>
+									<img src="<?php echo esc_url( $card_image['url'] ); ?>" alt="<?php echo esc_attr( $card_image['alt'] ); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+								<?php elseif ( has_post_thumbnail() ) : ?>
 									<?php the_post_thumbnail('medium', array(
     									'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300',
 									)); ?>

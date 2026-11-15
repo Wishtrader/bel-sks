@@ -7,19 +7,77 @@
 
 get_header();
 
-$service_id         = get_the_ID();
-$service_title      = get_the_title();
-$service_lead       = get_post_meta( $service_id, 'service_lead', true );
-$service_short_desc = get_post_meta( $service_id, 'service_description', true );
-$service_steps_raw  = get_post_meta( $service_id, 'service_steps', true );
-$service_includes   = get_post_meta( $service_id, 'service_includes_text', true );
-$service_includes_img = (int) get_post_meta( $service_id, 'service_includes_image', true );
-$service_why_text   = get_post_meta( $service_id, 'service_why_text', true );
-$service_why_img    = (int) get_post_meta( $service_id, 'service_why_image', true );
-$service_why_items  = get_post_meta( $service_id, 'service_why_items', true );
-$service_benefits   = get_post_meta( $service_id, 'service_benefits', true );
+$service_id    = get_the_ID();
+$service_title = get_the_title();
+$lower_title   = mb_strtolower( $service_title );
+$has_acf       = function_exists( 'get_field' );
 
-// Fallback data so the template is usable for every service post right away.
+// --- Data helpers ---------------------------------------------------------
+
+// Text value: ACF field -> legacy post meta -> default.
+$get_text = function ( $name, $default = '' ) use ( $service_id, $has_acf ) {
+  $value = $has_acf ? get_field( $name, $service_id ) : '';
+  if ( ! is_string( $value ) || '' === trim( $value ) ) {
+    $value = get_post_meta( $service_id, $name, true );
+  }
+  $value = is_string( $value ) ? trim( $value ) : '';
+  return '' !== $value ? $value : $default;
+};
+
+// Image attachment ID: ACF image field (array or ID) -> legacy numeric meta.
+$get_image_id = function ( $name ) use ( $service_id, $has_acf ) {
+  $value = $has_acf ? get_field( $name, $service_id ) : '';
+  if ( is_array( $value ) ) {
+    return (int) ( $value['ID'] ?? 0 );
+  }
+  if ( is_numeric( $value ) && (int) $value > 0 ) {
+    return (int) $value;
+  }
+  return (int) get_post_meta( $service_id, $name, true );
+};
+
+// Accepts an array (ACF repeater rows), a JSON array string, or a
+// newline-separated string.
+$decode_list = function ( $raw ) {
+  if ( is_array( $raw ) ) {
+    return $raw;
+  }
+  if ( ! is_string( $raw ) || '' === trim( $raw ) ) {
+    return null;
+  }
+  $decoded = json_decode( $raw, true );
+  if ( is_array( $decoded ) ) {
+    return $decoded;
+  }
+  $lines = array_filter( array_map( 'trim', preg_split( '/\r?\n/', $raw ) ) );
+  return $lines ? array_values( $lines ) : null;
+};
+
+// First non-empty string of a repeater row (or of a plain string).
+$text_of = function ( $row ) {
+  if ( is_array( $row ) ) {
+    foreach ( $row as $v ) {
+      if ( is_string( $v ) && '' !== trim( $v ) ) {
+        return trim( $v );
+      }
+    }
+    return '';
+  }
+  return is_string( $row ) ? trim( $row ) : '';
+};
+
+// List value: ACF repeater -> legacy meta -> default.
+$read_list = function ( $name, $default ) use ( $service_id, $has_acf, $decode_list ) {
+  $raw = $has_acf ? get_field( $name, $service_id ) : '';
+  if ( null === $raw || false === $raw || '' === $raw || array() === $raw ) {
+    $raw = get_post_meta( $service_id, $name, true );
+  }
+  $list = $decode_list( $raw );
+  return ( is_array( $list ) && $list ) ? $list : $default;
+};
+
+// --- Fallback data so the template is usable for every service post --------
+
 $default_lead = 'Скорость и безошибочность приёма и отгрузки товаров напрямую влияют на рентабельность и стабильность работы склада. Мы разрабатываем концепции, которые помогают сократить простои, снизить количество ошибок и повысить прозрачность операций.';
 
 $default_steps = array(
@@ -49,28 +107,48 @@ $default_benefits = array(
   array( 'icon' => 'trending-up',   'text' => 'Увеличить надёжность и прозрачность операций' ),
 );
 
-// Allow meta to override defaults. Each meta value can be a JSON array or a newline-separated list.
-$decode_list = function( $raw ) {
-  if ( ! $raw ) {
-    return null;
-  }
-  $decoded = json_decode( $raw, true );
-  if ( is_array( $decoded ) ) {
-    return $decoded;
-  }
-  $lines = array_filter( array_map( 'trim', preg_split( '/\r?\n/', $raw ) ) );
-  return $lines ? array_values( $lines ) : null;
-};
+// --- Content --------------------------------------------------------------
 
-$steps      = $decode_list( $service_steps_raw ) ?: $default_steps;
-$includes   = $service_includes ?: $default_includes;
-$why_text   = $service_why_text ?: $default_why_text;
-$why_items  = $decode_list( $service_why_items ) ?: $default_why_items;
-$benefits   = $decode_list( $service_benefits );
-if ( ! $benefits || ! is_array( $benefits ) || ! isset( $benefits[0]['icon'] ) ) {
+$lead        = $get_text( 'service_lead', $default_lead );
+$cta_label   = $get_text( 'service_cta_label', 'Получить консультацию' );
+
+$steps_heading = $get_text( 'service_steps_heading', '' );
+$steps         = array_values( array_filter( array_map( $text_of, $read_list( 'service_steps', $default_steps ) ) ) );
+if ( ! $steps ) {
+  $steps = $default_steps;
+}
+
+$includes_heading = $get_text( 'service_includes_heading', '' );
+$includes          = $get_text( 'service_includes_text', $default_includes );
+$includes_img      = $get_image_id( 'service_includes_image' );
+
+$why_heading = $get_text( 'service_why_heading', '' );
+$why_text    = $get_text( 'service_why_text', $default_why_text );
+$why_img     = $get_image_id( 'service_why_image' );
+$why_items   = array_values( array_filter( array_map( $text_of, $read_list( 'service_why_items', $default_why_items ) ) ) );
+if ( ! $why_items ) {
+  $why_items = $default_why_items;
+}
+
+$benefits_heading = $get_text( 'service_benefits_heading', 'Предложенная концепция позволяет' );
+$benefits_raw     = $read_list( 'service_benefits', $default_benefits );
+$benefits         = array();
+foreach ( $benefits_raw as $row ) {
+  if ( is_array( $row ) ) {
+    $icon = ( isset( $row['icon'] ) && is_string( $row['icon'] ) && '' !== trim( $row['icon'] ) ) ? trim( $row['icon'] ) : 'check';
+    $text = isset( $row['text'] ) && is_string( $row['text'] ) ? trim( $row['text'] ) : $text_of( $row );
+  } else {
+    $icon = 'check';
+    $text = is_string( $row ) ? trim( $row ) : '';
+  }
+  if ( '' === $text ) {
+    continue;
+  }
+  $benefits[] = array( 'icon' => $icon, 'text' => $text );
+}
+if ( ! $benefits ) {
   $benefits = $default_benefits;
 }
-$lead = $service_lead ?: $default_lead;
 ?>
 
 <main class="bg-[#f5f5f9]">
@@ -108,7 +186,7 @@ $lead = $service_lead ?: $default_lead;
         </div>
 
         <a href="#contact-form" class="inline-flex shrink-0 items-center gap-3 rounded-sm bg-[#3f5d7e] px-6 py-3 text-[14px] font-semibold tracking-wide text-white shadow-[0_10px_26px_rgba(15,23,42,0.35)] transition hover:bg-[#344d6a]">
-          <span>Получить консультацию</span>
+          <span><?php echo esc_html( $cta_label ); ?></span>
           <span class="flex h-7 w-7 items-center justify-center rounded bg-white/10 text-base leading-none">→</span>
         </a>
       </div>
@@ -119,7 +197,11 @@ $lead = $service_lead ?: $default_lead;
   <section class="bg-white py-12 sm:py-16 lg:py-20">
     <div class="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <h2 class="mb-10 text-[26px] font-extrabold leading-tight text-slate-900 sm:mb-14 sm:text-[32px]">
-        Как проходит <?php echo esc_html( mb_strtolower( $service_title ) ); ?>
+        <?php if ( $steps_heading ) : ?>
+          <?php echo esc_html( $steps_heading ); ?>
+        <?php else : ?>
+          Как проходит <?php echo esc_html( $lower_title ); ?>
+        <?php endif; ?>
       </h2>
 
       <ol class="relative grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
@@ -149,7 +231,11 @@ $lead = $service_lead ?: $default_lead;
       <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div>
           <h2 class="mb-5 text-[26px] font-extrabold leading-tight text-slate-900 sm:mb-6 sm:text-[32px]">
-            Что включает<br><?php echo esc_html( mb_strtolower( $service_title ) ); ?>
+            <?php if ( $includes_heading ) : ?>
+              <?php echo nl2br( esc_html( $includes_heading ) ); ?>
+            <?php else : ?>
+              Что включает<br><?php echo esc_html( $lower_title ); ?>
+            <?php endif; ?>
           </h2>
           <p class="text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
             <?php echo esc_html( $includes ); ?>
@@ -157,8 +243,8 @@ $lead = $service_lead ?: $default_lead;
         </div>
 
         <div class="overflow-hidden">
-          <?php if ( $service_includes_img ) : ?>
-            <?php echo wp_get_attachment_image( $service_includes_img, 'large', false, array( 'class' => 'h-auto w-full object-cover' ) ); ?>
+          <?php if ( $includes_img ) : ?>
+            <?php echo wp_get_attachment_image( $includes_img, 'large', false, array( 'class' => 'h-auto w-full object-cover' ) ); ?>
           <?php else : ?>
             <div class="aspect-[4/3] w-full bg-[linear-gradient(135deg,#dde3ee_0%,#b9c4d6_45%,#dde3ee_100%)]"></div>
           <?php endif; ?>
@@ -175,8 +261,8 @@ $lead = $service_lead ?: $default_lead;
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div class="order-2 overflow-hidden lg:order-1">
-          <?php if ( $service_why_img ) : ?>
-            <?php echo wp_get_attachment_image( $service_why_img, 'large', false, array( 'class' => 'h-auto w-full object-cover' ) ); ?>
+          <?php if ( $why_img ) : ?>
+            <?php echo wp_get_attachment_image( $why_img, 'large', false, array( 'class' => 'h-auto w-full object-cover' ) ); ?>
           <?php else : ?>
             <div class="aspect-[4/3] w-full bg-[linear-gradient(135deg,#dde3ee_0%,#b9c4d6_45%,#dde3ee_100%)]"></div>
           <?php endif; ?>
@@ -184,7 +270,11 @@ $lead = $service_lead ?: $default_lead;
 
         <div class="order-1 lg:order-2">
           <h2 class="mb-5 text-[26px] font-extrabold leading-tight text-slate-900 sm:mb-6 sm:text-[32px]">
-            Почему важно начать с <?php echo esc_html( mb_strtolower( $service_title ) ); ?>
+            <?php if ( $why_heading ) : ?>
+              <?php echo esc_html( $why_heading ); ?>
+            <?php else : ?>
+              Почему важно начать с <?php echo esc_html( $lower_title ); ?>
+            <?php endif; ?>
           </h2>
           <p class="mb-6 text-[15px] leading-relaxed text-slate-600 sm:text-[16px]">
             <?php echo esc_html( $why_text ); ?>
@@ -211,7 +301,7 @@ $lead = $service_lead ?: $default_lead;
     </div>
     <div class="relative mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
       <h2 class="mb-8 text-[24px] font-extrabold leading-tight text-slate-900 sm:mb-10 sm:text-[30px]">
-        Предложенная концепция позволяет
+        <?php echo esc_html( $benefits_heading ); ?>
       </h2>
 
       <div class="grid grid-cols-2 gap-4 border border-slate-200 bg-white p-4 shadow-[0_2px_12px_rgba(15,23,42,0.05)] sm:gap-6 sm:p-6 md:grid-cols-3 lg:grid-cols-5">

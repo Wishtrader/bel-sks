@@ -216,49 +216,96 @@ if ( ! empty( $product_cats ) ) {
 		</div>
 	</section>
 
-	<!-- Accessories (static placeholder, will be wired to DB later) -->
+	<?php
+	// Accessories: shown only when the "show accessories" checkbox is enabled for
+	// the product's category (or any of its ancestors), and lists only accessories
+	// bound to those same categories.
+	$accessory_term_ids = function_exists( 'belsks_get_accessory_term_ids_for_product' )
+		? belsks_get_accessory_term_ids_for_product( $product_id )
+		: array();
+
+	$accessory_cards = array();
+	if ( $accessory_term_ids && function_exists( 'belsks_accessories_section_enabled' ) && belsks_accessories_section_enabled( $product_id ) ) {
+		$accessories_query = new WP_Query( array(
+			'post_type'      => 'accessory',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+			'tax_query'      => array(
+				array(
+					'taxonomy' => 'product_cat',
+					'field'    => 'term_id',
+					'terms'    => $accessory_term_ids,
+				),
+			),
+		) );
+
+		foreach ( $accessories_query->posts as $accessory_post_id ) {
+			$acc_photo_id = get_field( 'accessory_image', $accessory_post_id, false );
+			if ( ! $acc_photo_id ) {
+				$acc_photo_id = get_post_thumbnail_id( $accessory_post_id );
+			} elseif ( is_array( $acc_photo_id ) ) {
+				$acc_photo_id = (int) ( $acc_photo_id['ID'] ?? 0 );
+			}
+			$acc_image = $acc_photo_id ? wp_get_attachment_image_url( (int) $acc_photo_id, 'medium' ) : '';
+			$acc_price = get_field( 'accessory_price', $accessory_post_id );
+
+			$accessory_cards[] = array(
+				'title' => get_the_title( $accessory_post_id ),
+				'link'  => get_permalink( $accessory_post_id ),
+				'image' => $acc_image,
+				'price' => ( is_numeric( $acc_price ) && (float) $acc_price > 0 )
+					? number_format( (float) $acc_price, 0, '.', ' ' ) . ' руб'
+					: '',
+			);
+		}
+	}
+	?>
+
+	<?php if ( ! empty( $accessory_cards ) ) : ?>
+	<!-- Accessories (from CMS, bound to the product's categories) -->
 	<section class="bg-[#f7f7fb] py-12 sm:py-16 lg:py-20">
 		<div class="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-0">
 			<h2 class="mb-8 text-[28px] font-extrabold leading-none text-slate-900 sm:text-[32px]">
 				Аксессуары
 			</h2>
 
-			<?php
-			$accessory_placeholder = 'https://placehold.co/400x300/ffffff/c53030?text=%D0%9B%D0%BE%D1%82%D0%BE%D0%BA';
-			$accessory_items      = array_fill( 0, 12, array(
-				'image'  => $accessory_placeholder,
-				'title'  => 'Лоток пластмассовый 150x150 / Комплект-01 (9 шт.)',
-				'price'  => '2000 руб',
-			) );
-			?>
-
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6 lg:gap-6">
-				<?php foreach ( $accessory_items as $item ) : ?>
-					<article class="flex flex-col bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)] transition-shadow hover:shadow-lg">
-						<a href="#" class="block aspect-[4/3] w-full overflow-hidden bg-slate-50">
-							<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['title'] ); ?>" class="h-full w-full object-contain">
+				<?php foreach ( $accessory_cards as $index => $item ) : ?>
+					<article class="flex flex-col bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)] transition-shadow hover:shadow-lg<?php echo $index >= 12 ? ' hidden' : ''; ?>" data-accessory-card>
+						<a href="<?php echo esc_url( $item['link'] ); ?>" class="block aspect-[4/3] w-full overflow-hidden bg-slate-50">
+							<?php if ( $item['image'] ) : ?>
+								<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['title'] ); ?>" class="h-full w-full object-contain" loading="lazy">
+							<?php else : ?>
+								<div class="flex h-full w-full items-center justify-center text-[13px] text-slate-400">Нет фото</div>
+							<?php endif; ?>
 						</a>
 						<div class="flex flex-1 flex-col p-4">
 							<h3 class="mb-3 text-[14px] font-bold leading-snug text-slate-900">
-								<a href="#" class="hover:text-[#1e3a5f]"><?php echo esc_html( $item['title'] ); ?></a>
+								<a href="<?php echo esc_url( $item['link'] ); ?>" class="hover:text-[#1e3a5f]"><?php echo esc_html( $item['title'] ); ?></a>
 							</h3>
-							<div class="mt-auto">
-								<a href="#" class="text-[15px] font-semibold text-[#1e3a5f] hover:underline">
-									<?php echo esc_html( $item['price'] ); ?>
-								</a>
-							</div>
+							<?php if ( $item['price'] ) : ?>
+								<div class="mt-auto">
+									<a href="<?php echo esc_url( $item['link'] ); ?>" class="text-[15px] font-semibold text-[#1e3a5f] hover:underline">
+										<?php echo esc_html( $item['price'] ); ?>
+									</a>
+								</div>
+							<?php endif; ?>
 						</div>
 					</article>
 				<?php endforeach; ?>
 			</div>
 
-			<div class="mt-10 flex justify-center sm:mt-12">
-				<button type="button" class="inline-flex items-center justify-center border border-[#D0D6E8] bg-white px-8 py-3 text-[15px] font-medium text-[#1e3a5f] transition-colors hover:bg-slate-50">
-					Показать больше
-				</button>
-			</div>
+			<?php if ( count( $accessory_cards ) > 12 ) : ?>
+				<div class="mt-10 flex justify-center sm:mt-12">
+					<button type="button" data-accessories-more class="inline-flex items-center justify-center border border-[#D0D6E8] bg-white px-8 py-3 text-[15px] font-medium text-[#1e3a5f] transition-colors hover:bg-slate-50">
+						Показать больше
+					</button>
+				</div>
+			<?php endif; ?>
 		</div>
 	</section>
+	<?php endif; ?>
 
 	<!-- Technical characteristics: tabs (description / specs / docs) -->
 	<?php
@@ -374,12 +421,27 @@ if ( ! empty( $product_cats ) ) {
 			});
 		});
 	}
+	function initAccessories() {
+		var btn = document.querySelector('[data-accessories-more]');
+		if (!btn) return;
+		btn.addEventListener('click', function() {
+			document.querySelectorAll('[data-accessory-card].hidden').forEach(function(card) {
+				card.classList.remove('hidden');
+			});
+			if (btn.parentNode) {
+				btn.parentNode.classList.add('hidden');
+			}
+		});
+	}
+
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', initGallery);
 		document.addEventListener('DOMContentLoaded', initTabs);
+		document.addEventListener('DOMContentLoaded', initAccessories);
 	} else {
 		initGallery();
 		initTabs();
+		initAccessories();
 	}
 })();
 </script>

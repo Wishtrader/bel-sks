@@ -2053,3 +2053,248 @@ function belsks_stellazh_template_override( $template ) {
 }
 add_filter( 'template_include', 'belsks_stellazh_template_override', 20 );
 
+
+/**
+ * Register Custom Post Type: Accessories (Аксессуары)
+ */
+function belsks_register_accessories_cpt() {
+	$labels = array(
+		'name'                  => _x( 'Аксессуары', 'Post type general name', 'belsks' ),
+		'singular_name'         => _x( 'Аксессуар', 'Post type singular name', 'belsks' ),
+		'menu_name'             => _x( 'Аксессуары', 'Admin Menu text', 'belsks' ),
+		'name_admin_bar'        => _x( 'Аксессуар', 'Add New on Toolbar', 'belsks' ),
+		'add_new'               => __( 'Добавить новый', 'belsks' ),
+		'add_new_item'          => __( 'Добавить новый аксессуар', 'belsks' ),
+		'new_item'              => __( 'Новый аксессуар', 'belsks' ),
+		'edit_item'             => __( 'Редактировать аксессуар', 'belsks' ),
+		'view_item'             => __( 'Просмотр аксессуара', 'belsks' ),
+		'all_items'             => __( 'Все аксессуары', 'belsks' ),
+		'search_items'          => __( 'Поиск аксессуаров', 'belsks' ),
+		'not_found'             => __( 'Аксессуары не найдены.', 'belsks' ),
+		'not_found_in_trash'    => __( 'В корзине аксессуаров нет.', 'belsks' ),
+		'featured_image'        => _x( 'Фото аксессуара', 'Featured image', 'belsks' ),
+		'set_featured_image'    => __( 'Установить фото аксессуара', 'belsks' ),
+		'remove_featured_image' => __( 'Удалить фото аксессуара', 'belsks' ),
+		'use_featured_image'    => __( 'Использовать как фото аксессуара', 'belsks' ),
+		'archives'              => __( 'Архив аксессуаров', 'belsks' ),
+		'insert_into_item'      => __( 'Добавить в аксессуар', 'belsks' ),
+		'uploaded_to_this_item' => __( 'Загружено к аксессуару', 'belsks' ),
+		'items_list'            => __( 'Список аксессуаров', 'belsks' ),
+	);
+
+	$args = array(
+		'labels'             => $labels,
+		'public'             => true,
+		'publicly_queryable' => true,
+		'show_ui'            => true,
+		'show_in_menu'       => true,
+		'query_var'          => true,
+		'rewrite'            => array( 'slug' => 'aksessuary' ),
+		'capability_type'    => 'post',
+		'has_archive'        => false,
+		'hierarchical'       => false,
+		'menu_position'      => 22,
+		'supports'           => array( 'title', 'thumbnail' ),
+		'show_in_rest'       => true,
+		'menu_icon'          => 'dashicons-admin-generic',
+	);
+
+	register_post_type( 'accessory', $args );
+
+	// Flush rewrite rules once so /aksessuary/<slug>/ URLs work without
+	// visiting Settings → Permalinks manually.
+	if ( ! get_option( 'belsks_accessory_rewrite_flushed' ) ) {
+		flush_rewrite_rules();
+		update_option( 'belsks_accessory_rewrite_flushed', 1 );
+	}
+}
+add_action( 'init', 'belsks_register_accessories_cpt' );
+
+/**
+ * Register ACF Fields for Accessories
+ */
+function belsks_register_accessories_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'      => 'group_accessory_fields',
+		'title'    => 'Детали аксессуара',
+		'fields'   => array(
+			array(
+				'key'           => 'field_accessory_image',
+				'label'         => 'Фото',
+				'name'          => 'accessory_image',
+				'type'          => 'image',
+				'instructions'  => 'Главное изображение аксессуара (в карточке и на странице аксессуара). Если не задано — используется миниатюра записи.',
+				'required'      => 0,
+				'return_format' => 'array',
+				'preview_size'  => 'medium',
+				'mime_types'    => 'jpg,jpeg,png,webp',
+			),
+			array(
+				'key'           => 'field_accessory_description',
+				'label'         => 'Описание',
+				'name'          => 'accessory_description',
+				'type'          => 'textarea',
+				'instructions'  => 'Описание аксессуара, отображается на его странице',
+				'required'      => 0,
+				'return_format' => 'raw',
+				'rows'          => 6,
+				'placeholder'   => 'Описание аксессуара...',
+			),
+			array(
+				'key'          => 'field_accessory_specs',
+				'label'        => 'Характеристики',
+				'name'         => 'accessory_specs',
+				'type'         => 'repeater',
+				'instructions' => 'Строки таблицы характеристик: название и значение',
+				'required'     => 0,
+				'layout'       => 'table',
+				'button_label' => 'Добавить характеристику',
+				'sub_fields'   => array(
+					array(
+						'key'     => 'field_accessory_spec_name',
+						'label'   => 'Название',
+						'name'    => 'spec_name',
+						'type'    => 'text',
+						'wrapper' => array( 'width' => '50' ),
+					),
+					array(
+						'key'     => 'field_accessory_spec_value',
+						'label'   => 'Значение',
+						'name'    => 'spec_value',
+						'type'    => 'text',
+						'wrapper' => array( 'width' => '50' ),
+					),
+				),
+			),
+			array(
+				'key'           => 'field_accessory_price',
+				'label'         => 'Цена',
+				'name'          => 'accessory_price',
+				'type'          => 'number',
+				'instructions'  => 'Цена в рублях. Если не задана — цена в карточке не отображается.',
+				'required'      => 0,
+				'min'           => 0,
+				'step'          => 1,
+				'append'        => 'руб.',
+				'return_format' => 'number',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param'    => 'post_type',
+					'operator' => '==',
+					'value'    => 'accessory',
+				),
+			),
+		),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen'        => '',
+		'active'                => true,
+		'description'           => '',
+		'show_in_rest'          => false,
+	) );
+}
+add_action( 'acf/init', 'belsks_register_accessories_acf_fields' );
+
+/**
+ * Register ACF Fields for product categories: accessories visibility checkbox
+ */
+function belsks_register_product_cat_accessories_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key'      => 'group_product_cat_accessories',
+		'title'    => 'Аксессуары категории',
+		'fields'   => array(
+			array(
+				'key'           => 'field_product_cat_show_accessories',
+				'label'         => 'Показывать секцию «Аксессуары»',
+				'name'          => 'show_accessories',
+				'type'          => 'true_false',
+				'instructions'  => 'Секция «Аксессуары» будет отображаться на страницах товаров этой категории и всех её подкатегорий',
+				'required'      => 0,
+				'default_value' => 0,
+				'ui'            => 1,
+				'ui_on_text'    => 'Включено',
+				'ui_off_text'   => 'Выключено',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param'    => 'taxonomy',
+					'operator' => '==',
+					'value'    => 'product_cat',
+				),
+			),
+		),
+		'menu_order'            => 0,
+		'position'              => 'normal',
+		'style'                 => 'default',
+		'label_placement'       => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen'        => '',
+		'active'                => true,
+		'description'           => '',
+		'show_in_rest'          => false,
+	) );
+}
+add_action( 'acf/init', 'belsks_register_product_cat_accessories_acf_fields' );
+
+/**
+ * Product category term IDs relevant for the accessories section:
+ * the product's categories plus all their ancestors (a parent's setting
+ * applies to every subcategory).
+ *
+ * @param int $product_id Product ID.
+ * @return int[]
+ */
+function belsks_get_accessory_term_ids_for_product( $product_id ) {
+	$term_ids = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'ids' ) );
+	if ( is_wp_error( $term_ids ) || empty( $term_ids ) ) {
+		return array();
+	}
+
+	$all_ids = array();
+	foreach ( $term_ids as $term_id ) {
+		$all_ids[] = (int) $term_id;
+		foreach ( get_ancestors( (int) $term_id, 'product_cat' ) as $ancestor_id ) {
+			$all_ids[] = (int) $ancestor_id;
+		}
+	}
+
+	return array_values( array_unique( $all_ids ) );
+}
+
+/**
+ * Whether the accessories section must be shown on the product page:
+ * enabled via the category checkbox on any of the product's categories
+ * or their ancestors.
+ *
+ * @param int $product_id Product ID.
+ * @return bool
+ */
+function belsks_accessories_section_enabled( $product_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return false;
+	}
+
+	foreach ( belsks_get_accessory_term_ids_for_product( $product_id ) as $term_id ) {
+		if ( get_field( 'show_accessories', 'term_' . $term_id ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}

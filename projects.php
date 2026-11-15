@@ -116,10 +116,9 @@ if ( is_wp_error( $all_categories ) ) {
           );
         }
 
-        // For any missing items in a block, pad with placeholders.
-        while ( count( $projects ) < 10 ) {
-          $projects[] = array( 'title' => '', 'url' => '', 'link' => '#', 'category' => '' );
-        }
+        // Only real projects from the CMS are rendered; empty slots stay hidden
+        // so tiles appear as projects are added.
+        $projects_count = count( $projects );
         ?>
 
         <!-- Block 1 (5 items: 1 large 2x2, 2 small stacked, 2 wide medium) -->
@@ -134,6 +133,9 @@ if ( is_wp_error( $all_categories ) ) {
           );
 
           for ( $i = 0; $i < 5; $i++ ) :
+            if ( $i >= $projects_count ) {
+              continue; // No project in CMS for this slot yet — keep the grid, render nothing.
+            }
             $p = $projects[ $i ];
             $s = $sizes_block1[ $i ];
             ?>
@@ -159,6 +161,9 @@ if ( is_wp_error( $all_categories ) ) {
           );
 
           for ( $i = 0; $i < 5; $i++ ) :
+            if ( $i + 5 >= $projects_count ) {
+              continue; // No project in CMS for this slot yet — keep the grid, render nothing.
+            }
             $p = $projects[ $i + 5 ];
             $s = $sizes_block2[ $i ];
             ?>
